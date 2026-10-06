@@ -1,0 +1,3 @@
+# Direct server dependencies. requirements.txt locks the full resolved environment.
+fastapi>=0.115,<1
+uvicorn>=0.30,<1

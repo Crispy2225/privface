@@ -1,0 +1,31 @@
+{
+  "name": "isl-face-auth-client",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "node --experimental-strip-types --test src/*.test.ts",
+    "prepare:vision": "node scripts/prepare-vision.mjs",
+    "predev": "npm run prepare:vision",
+    "prebuild": "npm run prepare:vision"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "1.0.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "typescript": "7.0.2",
+    "vite": "8.3.2"
+  }
+}

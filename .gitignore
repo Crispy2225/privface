@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+# Keep private biometric material out of source control.
+data/
+captures/
+embeddings/
+models/
+proofs/
+
+# Copied from the locked MediaPipe package by prepare:vision.
+/client/public/vision/wasm/
