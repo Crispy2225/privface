@@ -1,0 +1,6 @@
+Public pretrained face-api.js model weights (not user biometric data).
+Upstream: https://github.com/justadudewhohacks/face-api.js
+Revision: a86f011d72124e5fb93e59d5c4ab98f699dd5c9c
+File sources and SHA-256 hashes: client/scripts/recognition-checksums.json
+Library license and model documentation: see upstream LICENSE and README.md.
+Models: Tiny Face Detector, Face Landmark 68 Tiny, Face Recognition (128 dimensions).

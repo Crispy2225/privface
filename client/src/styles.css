@@ -168,3 +168,4 @@ h2:focus { outline: none; }
 .face-validation.passed { border-color: var(--link); background: var(--accent-soft); }
 .face-validation.error { border-color: var(--error-border); background: var(--error-bg); }.face-validation.error p { color: var(--error-text); }
 .liveness-notice { color: var(--muted); font-size: 10px; line-height: 1.7; margin: 14px 0 0; }
+.local-enrollment { border-top: 1px solid var(--divider); margin-top: 20px; padding-top: 18px; }

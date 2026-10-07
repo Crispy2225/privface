@@ -11,12 +11,16 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --test src/*.test.ts",
-    "prepare:vision": "node scripts/prepare-vision.mjs",
+    "prepare:vision": "node scripts/prepare-vision.mjs && node scripts/prepare-recognition.mjs",
     "predev": "npm run prepare:vision",
     "prebuild": "npm run prepare:vision"
   },
+  "overrides": {
+    "node-fetch": "2.7.0"
+  },
   "dependencies": {
     "@mediapipe/tasks-vision": "1.0.1",
+    "face-api.js": "0.22.2",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -25,6 +29,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.2",
+    "fake-indexeddb": "6.2.4",
     "typescript": "7.0.2",
     "vite": "8.3.2"
   }

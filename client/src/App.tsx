@@ -93,9 +93,9 @@ function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
       <p className="under-button"><LockIcon />No password to create or remember.</p>
     </form> : <div className="face-step">
       <div className="account-chip"><span className="avatar">{(isRegister ? name.trim() : username).slice(0, 1).toUpperCase()}</span><span>{isRegister ? name.trim() : username}<small>@{username}</small></span><button className="text-button" onClick={() => setStep('details')}>Edit</button></div>
-      <CameraCapture />
-      <p className="implementation-note" id={`${id}-unavailable`}>{isRegister ? 'Face enrollment is the next step in development. Capturing a photo does not create an account.' : 'Face matching and proof verification are in development. Capturing a photo does not sign you in.'}</p>
-      <button className="primary-button" type="button" disabled aria-describedby={`${id}-unavailable`}>{isRegister ? 'Register my face' : 'Verify & sign in'}<LockIcon /></button>
+      <CameraCapture enrollment={isRegister ? { username, displayName: name } : undefined} />
+      <p className="implementation-note" id={`${id}-unavailable`}>{isRegister ? 'Local registration saves a face template for this browser. Account binding to the server is planned; this does not create a server account.' : 'Face matching and proof verification are in development. Capturing a photo does not sign you in.'}</p>
+      {!isRegister && <button className="primary-button" type="button" disabled aria-describedby={`${id}-unavailable`}>Verify & sign in<LockIcon /></button>}
       <button className="back-button" type="button" onClick={() => setStep('details')}>← Back to {isRegister ? 'your details' : 'your account'}</button>
     </div>}
 
@@ -116,7 +116,7 @@ export default function App() {
         <div className="principles" id="how-it-works"><div><span>01</span><strong>Enroll once</strong><p>A face setup for your account.</p></div><div><span>02</span><strong>Verify locally</strong><p>Your face stays on your device.</p></div><div><span>03</span><strong>Prove securely</strong><p>The server verifies a proof.</p></div></div>
         <p className="design-note">Our intended authentication flow. Face matching and ZK proofs are in development.</p>
       </section>
-      <div className="form-column"><AuthForm key={mode} mode={mode} onSwitch={() => setMode(current => current === 'login' ? 'register' : 'login')} /><div className="preview-note"><LockIcon /><span>Built for your eyes only.</span>Camera preview works locally. Authentication is coming next.</div></div>
+      <div className="form-column"><AuthForm key={mode} mode={mode} onSwitch={() => setMode(current => current === 'login' ? 'register' : 'login')} /><div className="preview-note"><LockIcon /><span>Built for your eyes only.</span>Face enrollment stays in this browser. Sign-in is coming next.</div></div>
     </main>
     <footer className="site-footer"><span>PrivFace · Privacy-preserving face authentication</span><ServerStatus /></footer>
   </div>

@@ -8,11 +8,13 @@ The client has a modern Register/Login interface, camera preview, local face val
 
 Captured photos are held only in React memory. They are never uploaded, saved in browser storage, or written to disk. They are cleared on leaving the face step, switching Login/Register, hiding the page, or reloading. Camera tracks stop after capture, on Stop, when leaving the face step, and when the page is hidden or unloaded. Late permission grants after cancellation are stopped immediately.
 
-Face detection and heuristic movement checks are implemented. Actual enrollment, identity matching, nonce handling, ZK proofs, and login sessions are not implemented. The final register/sign-in buttons remain disabled. A captured photo or healthy API is not an authentication result.
+Face detection, heuristic movement checks, local embedding generation, and browser-local registration are implemented. Register saves an encrypted 128-dimensional pretrained face template in IndexedDB, associated with a case-insensitive username, after separate storage consent. The photo is discarded after saving. Duplicate usernames cannot be overwritten; existing local enrollment can be deleted from Register after entering the same username. Identity matching, server account creation/binding, nonce handling, ZK proofs, and login sessions are not implemented. Sign-in remains disabled. Local enrollment is not a server authentication result.
+
+The server-binding decision and its trust limits are documented in [docs/enrollment-binding.md](docs/enrollment-binding.md): authorize an account-bound, versioned hiding commitment using a verified account bootstrap, WebAuthn user verification, and an expiring single-use server challenge. This protocol is a design, not a placeholder verifier or an implemented server registration endpoint.
 
 ## Stack and layout
 
-- `client/`: React + TypeScript, served by Vite. Future local face processing and proof generation belong on the client.
+- `client/`: React + TypeScript, served by Vite. Face validation, pretrained embedding generation, and encrypted local enrollment run here. Future proof generation also belongs on the client.
 - `server/`: FastAPI + Uvicorn. Future challenges and proof verification belong here.
 - `client/package-lock.json`: locked JavaScript dependencies.
 - `server/requirements.txt`: locked Python dependencies.
@@ -64,7 +66,7 @@ The client should show **Server connected**. Stop either process with Ctrl+C in 
 
 ## Appearance
 
-Use the sun/moon button in the header to switch between Light and Dark. On the first visit, the site follows the system appearance and subsequent system changes. Choosing a mode saves `privface-theme` in local browser storage and remembers it across reloads. Only the appearance preference is persisted; captured photos remain in memory.
+Use the sun/moon button in the header to switch between Light and Dark. On the first visit, the site follows the system appearance and subsequent system changes. Choosing a mode saves `privface-theme` in local browser storage and remembers it across reloads. Captured photos remain in memory; explicitly consented face templates persist separately in IndexedDB until deleted or site data is cleared.
 
 ## Configuration
 
@@ -97,7 +99,8 @@ If the page shows **Server unavailable**, check the server terminal, port 8000, 
 3. Center exactly one face. After the face model loads, follow three randomized instructions: close/reopen both eyes, turn toward the left arrow and return, and turn toward the right arrow and return. Hold each turn briefly.
 4. When **Ready to capture** appears, choose **Capture photo** within six seconds. The exact captured frame is checked again for one centered, forward-facing face. The camera turns off and shows a local photo preview.
 5. Choose **Retake photo** to reopen the camera, or **Discard** to clear the photo. **Stop camera** ends a live preview without capturing.
-6. Edit, Back, switching sections, and hiding the page all release the camera. No account or successful login is simulated.
+6. In Register, consent to retaining a face template and choose **Save local face enrollment**. The pretrained model runs on-device, the encrypted template is saved for the username, and the photo is discarded. The template is scoped to this browser profile and origin (including port); it is not uploaded or bound to a server account. Existing enrollment can be deleted here, including after reloading and entering the same username again.
+7. Edit, Back, switching sections, and hiding the page all release the camera and cancel pending enrollment. No successful server login is simulated.
 
 Camera access requires localhost or HTTPS. If access is blocked, enable the camera for this site in browser settings and allow the browser under macOS System Settings → Privacy & Security → Camera. If the embedded browser cannot provide camera access, open the same URL in Safari, Chrome, or Firefox. Close other camera apps if the camera is busy. You can cancel a pending permission request without keeping a stream alive if permission arrives later.
 
@@ -105,7 +108,7 @@ Run camera lifecycle tests with `npm --prefix client test`. These use fake media
 
 ## Next milestones
 
-1. Validate the face/liveness prototype with real cameras and a consented spoof-test set, then implement local embeddings and enrollment.
+1. Validate face/liveness and the new local enrollment flow with real cameras and a consented spoof-test set; evaluate descriptor accuracy and matching thresholds.
 2. Quantization and a small proof feasibility experiment.
 3. Account-bound enrollment, expiring single-use challenges, and real proof verification.
 
@@ -117,7 +120,15 @@ MediaPipe Face Landmarker runs locally on downscaled frames (up to 640 pixels wi
 
 The randomized challenge requires a neutral baseline, open–closed–open eyes, both head directions with returns to center, and a final neutral pose. Missing/multiple faces, invalid framing, video gaps over 650 ms, and timeouts reset it. Capture is allowed for six seconds with observations no older than 500 ms; the same canvas frame is revalidated before encoding. Capture stays disabled on model errors. Stop/restart retries model loading. Retake starts a fresh challenge. No liveness result is sent to or trusted by the server.
 
-**Security boundary:** these are heuristics, not certified presentation-attack detection. A stationary image cannot complete the scripted eye/motion sequence in the deterministic tests, but this has not established resistance to real-world photos, cutouts, bent prints, replayed videos, deepfakes, virtual cameras, or modified browser code. Landmark continuity is not identity continuity. Thresholds are provisional and need evaluation across cameras, lighting, glasses, and users. The browser cannot enforce trusted enrollment by itself. Production registration remains disabled until the enrollment protocol, stronger spoof protection, and server verification are designed and evaluated. Do not label this result “identity verified” or “spoof-proof.”
+**Security boundary:** these are heuristics, not certified presentation-attack detection. A stationary image cannot complete the scripted eye/motion sequence in the deterministic tests, but this has not established resistance to real-world photos, cutouts, bent prints, replayed videos, deepfakes, virtual cameras, or modified browser code. Landmark continuity is not identity continuity. Thresholds are provisional and need evaluation across cameras, lighting, glasses, and users. The browser cannot enforce trusted enrollment by itself. Server registration and sign-in remain unavailable until the enrollment protocol, stronger spoof protection, and server verification are implemented and evaluated. Do not label this result “identity verified” or “spoof-proof.”
+
+### Local recognition model and template storage
+
+`face-api.js` 0.22.2 supplies Tiny Face Detector, the tiny 68-point alignment model, and the pretrained 128-dimensional recognition network. Assets are checked in under `client/public/vision/recognition/`, sourced from a pinned upstream commit recorded in `client/scripts/recognition-checksums.json`. `predev` and `prebuild` verify every file's SHA-256. Runtime model requests are same-origin; descriptors and photos are never sent to the API. The library is MIT licensed; see the [upstream documentation](https://github.com/justadudewhohacks/face-api.js) for model provenance and licenses. `download-recognition.mjs` is a maintainer update tool that deliberately replaces assets and checksums; ordinary startup never downloads them remotely.
+
+Templates use AES-256-GCM with a fresh per-record non-extractable Web Crypto key and authenticated username/model/schema metadata. Keys live in IndexedDB beside encrypted templates: same-origin scripts or a compromised browser can decrypt them. This is prototype storage, not hardware-backed protection. No matching threshold or normalization is introduced before evaluation.
+
+`npm --prefix client test` also verifies template encryption, tamper rejection, cancelled writes, durable key cloning, deletion and duplicate races using fake IndexedDB. For a real-browser model/storage smoke test, run the Vite dev server and open `/tests/recognition-smoke.html`; it loads the recognition models, rejects a blank image and stores/deletes a synthetic descriptor. It does not use a camera or establish recognition accuracy.
 
 ### Local model assets
 
