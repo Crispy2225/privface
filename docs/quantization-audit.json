@@ -1,0 +1,43 @@
+{
+  "models": [
+    {
+      "name": "tiny_face_detector_model",
+      "parameters": 193321,
+      "tensors": 19,
+      "storedBytes": 193321,
+      "quantizedParameters": 193321,
+      "float32Parameters": 0,
+      "equivalentFloat32Bytes": 773284,
+      "storageReductionPercent": 75
+    },
+    {
+      "name": "face_landmark_68_tiny_model",
+      "parameters": 77224,
+      "tensors": 28,
+      "storedBytes": 77224,
+      "quantizedParameters": 77224,
+      "float32Parameters": 0,
+      "equivalentFloat32Bytes": 308896,
+      "storageReductionPercent": 75
+    },
+    {
+      "name": "face_recognition_model",
+      "parameters": 5614592,
+      "tensors": 117,
+      "storedBytes": 6444032,
+      "quantizedParameters": 5338112,
+      "float32Parameters": 276480,
+      "equivalentFloat32Bytes": 22458368,
+      "storageReductionPercent": 71.30676636877622
+    }
+  ],
+  "inference": "Weights dequantize to float32 for face-api.js inference; this is not integer-only inference.",
+  "descriptor": {
+    "dimensions": 128,
+    "int16Bytes": 256,
+    "float32Bytes": 512,
+    "scale": 4096,
+    "maxComponentRoundingError": 0.0001220703125,
+    "maxPairDistanceErrorBound": 0.0027621358640099515
+  }
+}

@@ -5,6 +5,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   return {
     plugins: [react()],
+    cacheDir: '.vite-cache',
     server: {
       host: '127.0.0.1',
       port: 5173,

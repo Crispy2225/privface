@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>PrivFace local evaluation</title></head><body>
+<h1>Local recognition evaluation</h1>
+<p>Use only consented study images. Images are processed in this browser. The downloaded descriptors are sensitive: keep them in a private, ignored data directory and delete them after the study.</p>
+<p>Filenames: calibration__subject__session__sample.jpg or test__subject__session__sample.jpg. Use different subjects across the two splits and different capture sessions for genuine comparisons.</p>
+<label><input id="consent" type="checkbox">I have consent to process and export these study descriptors.</label><p><input id="images" type="file" accept="image/*" multiple></p><button id="run">Extract study descriptors</button><pre id="status"></pre><a id="download" hidden>Download private dataset</a>
+<script type="module" src="./evaluation.ts"></script></body></html>

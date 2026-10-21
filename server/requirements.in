@@ -1,3 +1,6 @@
-# Direct server dependencies. requirements.txt locks the full resolved environment.
 fastapi>=0.115,<1
 uvicorn>=0.30,<1
+sqlalchemy>=2,<3
+psycopg[binary]>=3,<4
+webauthn>=2,<3
+alembic>=1.13,<2

@@ -13,7 +13,9 @@
     "test": "node --experimental-strip-types --test src/*.test.ts",
     "prepare:vision": "node scripts/prepare-vision.mjs && node scripts/prepare-recognition.mjs",
     "predev": "npm run prepare:vision",
-    "prebuild": "npm run prepare:vision"
+    "prebuild": "npm run prepare:vision",
+    "audit:quantization": "node scripts/audit-quantization.mjs",
+    "evaluate:matching": "node --experimental-strip-types scripts/evaluate-matching.mjs"
   },
   "overrides": {
     "node-fetch": "2.7.0"

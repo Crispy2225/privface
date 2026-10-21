@@ -1,0 +1,7 @@
+{
+  "model": "face-api.js@0.22.2/faceRecognitionNet/128-v1",
+  "quantization": "int16-s4096-v1",
+  "threshold": 0.5,
+  "calibrated": false,
+  "note": "Provisional demo threshold. Replace only after consented calibration and held-out evaluation."
+}

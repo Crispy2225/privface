@@ -18,3 +18,9 @@ proofs/
 
 # Copied from the locked MediaPipe package by prepare:vision.
 /client/public/vision/wasm/
+
+.vite-cache/
+*.sqlite
+*.sqlite-*
+# Generated experimental weights; reproduce with scripts/quantize-recognition.mjs
+/client/public/vision/recognition-int8/

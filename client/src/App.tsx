@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import CameraCapture from './CameraCapture'
 import ThemeToggle from './ThemeToggle'
+import AccountAccess from './AccountAccess'
 
 type Mode = 'login' | 'register'
 type Connection = 'checking' | 'connected' | 'offline'
@@ -74,10 +75,12 @@ function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
       <button type="button" aria-pressed={isRegister} onClick={() => { if (!isRegister) onSwitch() }}>Register</button>
     </div>
 
+    <AccountAccess username={username} onAccount={(user, display) => { setUsername(user); setName(display) }} />
+
     <div className="panel-heading">
       <span className="eyebrow">{isRegister ? 'CREATE YOUR PRIVFACE ACCOUNT' : 'YOUR PRIVFACE ACCOUNT'}</span>
       <h2 ref={headingRef} tabIndex={-1} id={`${id}-title`}>{step === 'face' ? (isRegister ? 'Set up your face.' : 'Verify it’s you.') : (isRegister ? 'Hello, you.' : 'Welcome back.')}</h2>
-      <p>{step === 'face' ? (isRegister ? 'Start with a clear photo. Your camera preview stays on this device.' : 'Open your camera and capture a fresh photo to preview the login flow.') : (isRegister ? 'Create your account, then register your face once.' : 'Enter your username to continue with face verification.')}</p>
+      <p>{step === 'face' ? (isRegister ? 'Start with a clear photo. Your camera preview stays on this device.' : 'Compare a fresh photo locally, then confirm your passkey.') : (isRegister ? 'Create your account, then register your face once.' : 'Enter your username to continue with face verification.')}</p>
     </div>
 
     <ol className="steps" aria-label={isRegister ? 'Registration steps' : 'Login steps'}>
@@ -93,9 +96,8 @@ function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
       <p className="under-button"><LockIcon />No password to create or remember.</p>
     </form> : <div className="face-step">
       <div className="account-chip"><span className="avatar">{(isRegister ? name.trim() : username).slice(0, 1).toUpperCase()}</span><span>{isRegister ? name.trim() : username}<small>@{username}</small></span><button className="text-button" onClick={() => setStep('details')}>Edit</button></div>
-      <CameraCapture enrollment={isRegister ? { username, displayName: name } : undefined} />
-      <p className="implementation-note" id={`${id}-unavailable`}>{isRegister ? 'Local registration saves a face template for this browser. Account binding to the server is planned; this does not create a server account.' : 'Face matching and proof verification are in development. Capturing a photo does not sign you in.'}</p>
-      {!isRegister && <button className="primary-button" type="button" disabled aria-describedby={`${id}-unavailable`}>Verify & sign in<LockIcon /></button>}
+      <CameraCapture key={username} enrollment={isRegister ? { username, displayName: name } : undefined} verificationUsername={isRegister ? undefined : username} />
+      <p className="implementation-note" id={`${id}-unavailable`}>{isRegister ? 'Local registration saves a face template for this browser. Use the server-account panel to authorize its binding with your passkey.' : 'Face comparison stays local. Server sign-in requires your passkey; ZK verification is not yet implemented.'}</p>
       <button className="back-button" type="button" onClick={() => setStep('details')}>← Back to {isRegister ? 'your details' : 'your account'}</button>
     </div>}
 
@@ -113,10 +115,10 @@ export default function App() {
         <h1 id="intro-title">Simply you.<br /><em>Securely in.</em></h1>
         <p className="intro-description">A more personal way to sign in. Designed to recognize you while keeping your face data yours.</p>
         <div className="face-art" aria-hidden="true"><div className="art-glow" /><div className="orbit orbit-one" /><div className="orbit orbit-two" /><div className="art-core"><FaceMark /></div><span className="art-label"><LockIcon /> Your face. Your device.</span><i className="orbit-dot dot-one" /><i className="orbit-dot dot-two" /></div>
-        <div className="principles" id="how-it-works"><div><span>01</span><strong>Enroll once</strong><p>A face setup for your account.</p></div><div><span>02</span><strong>Verify locally</strong><p>Your face stays on your device.</p></div><div><span>03</span><strong>Prove securely</strong><p>The server verifies a proof.</p></div></div>
-        <p className="design-note">Our intended authentication flow. Face matching and ZK proofs are in development.</p>
+        <div className="principles" id="how-it-works"><div><span>01</span><strong>Enroll once</strong><p>A face setup for your account.</p></div><div><span>02</span><strong>Verify locally</strong><p>Your face stays on your device.</p></div><div><span>03</span><strong>Authorize access</strong><p>Authorize with your passkey.</p></div></div>
+        <p className="design-note">Local face matching and passkey authorization. Zero-knowledge proofs are a future stage.</p>
       </section>
-      <div className="form-column"><AuthForm key={mode} mode={mode} onSwitch={() => setMode(current => current === 'login' ? 'register' : 'login')} /><div className="preview-note"><LockIcon /><span>Built for your eyes only.</span>Face enrollment stays in this browser. Sign-in is coming next.</div></div>
+      <div className="form-column"><AuthForm key={mode} mode={mode} onSwitch={() => setMode(current => current === 'login' ? 'register' : 'login')} /><div className="preview-note"><LockIcon /><span>Built for your eyes only.</span>Face enrollment stays in this browser. Passkeys authorize sign-in.</div></div>
     </main>
     <footer className="site-footer"><span>PrivFace · Privacy-preserving face authentication</span><ServerStatus /></footer>
   </div>

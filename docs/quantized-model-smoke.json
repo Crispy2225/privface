@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "input": "synthetic zero-valued 150x150 RGB tensor (not a real face)",
+  "dimensions": 128,
+  "inferenceMs": 251.64079199999998,
+  "biometricAccuracy": "Not evaluated"
+}

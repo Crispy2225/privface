@@ -169,3 +169,8 @@ h2:focus { outline: none; }
 .face-validation.error { border-color: var(--error-border); background: var(--error-bg); }.face-validation.error p { color: var(--error-text); }
 .liveness-notice { color: var(--muted); font-size: 10px; line-height: 1.7; margin: 14px 0 0; }
 .local-enrollment { border-top: 1px solid var(--divider); margin-top: 20px; padding-top: 18px; }
+
+.account-access { border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 18px 0; }
+.account-access h3 { margin-top: 0; }
+.account-access button { margin: 6px 0; }
+.account-access input { width: 100%; }

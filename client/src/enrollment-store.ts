@@ -38,6 +38,7 @@ export async function saveEnrollment(record: EncryptedTemplate, signal: AbortSig
 }
 
 export async function deleteEnrollment(username: string): Promise<void> {
+  await deleteBindingOpenings(username)
   const database = await openDatabase()
   try {
     await new Promise<void>((resolve, reject) => {
@@ -59,4 +60,40 @@ export async function hasEnrollment(username: string): Promise<boolean> {
       transaction.onabort = () => reject(new Error('Could not read local enrollment.'))
     })
   } finally { database.close() }
+}
+
+export async function getEnrollment(username: string): Promise<EncryptedTemplate | null> {
+  const database = await openDatabase()
+  try {
+    return await new Promise((resolve, reject) => {
+      const transaction = database.transaction('templates', 'readonly')
+      const request = transaction.objectStore('templates').get(canonicalUsername(username))
+      transaction.oncomplete = () => resolve(request.result ?? null)
+      transaction.onabort = () => reject(new Error('Could not read the local template.'))
+    })
+  } finally { database.close() }
+}
+
+async function deleteBindingOpenings(username: string): Promise<void> {
+  await new Promise<void>((resolve, reject) => {
+    const request = indexedDB.open('privface-bindings', 1)
+    let blocked = false
+    request.onupgradeneeded = () => request.result.createObjectStore('openings', { keyPath: 'commitment' })
+    request.onblocked = () => { blocked = true; reject(new Error('Close other tabs before deleting this enrollment.')) }
+    request.onerror = () => reject(new Error('Could not delete local commitment openings.'))
+    request.onsuccess = () => {
+      const db = request.result
+      if (blocked) { db.close(); return }
+      db.onversionchange = () => db.close()
+      const tx = db.transaction('openings', 'readwrite')
+      const cursor = tx.objectStore('openings').openCursor()
+      cursor.onsuccess = () => {
+        if (!cursor.result) return
+        if (cursor.result.value.username === canonicalUsername(username)) cursor.result.delete()
+        cursor.result.continue()
+      }
+      tx.oncomplete = () => { db.close(); resolve() }
+      tx.onabort = () => { db.close(); reject(new Error('Could not delete commitment openings.')) }
+    }
+  })
 }

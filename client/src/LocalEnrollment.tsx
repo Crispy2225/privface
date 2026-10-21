@@ -61,6 +61,6 @@ export default function LocalEnrollment({ photo, username, displayName, clearPho
     <button className="primary-button" type="button" disabled={!photo || !consent || busy || saved} onClick={() => void register()}>{busy ? 'Preparing enrollment…' : saved ? 'Enrolled on this device' : 'Save local face enrollment'}</button>
     {message && <p className="camera-feedback" role="status">{message}</p>}
     {saved && <button className="text-button" disabled={busy} type="button" onClick={() => void remove()}>Delete local enrollment</button>}
-    <p className="camera-privacy">The photo is discarded after saving. The encrypted numerical template stays in this browser. Server binding and sign-in are still in development.</p>
+    <p className="camera-privacy">The photo is discarded after saving. The encrypted numerical template stays in this browser. Authorize a server binding using the passkey controls above.</p>
   </section>
 }
