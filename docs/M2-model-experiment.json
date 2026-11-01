@@ -1,0 +1,114 @@
+{
+  "dataset": {
+    "name": "Olivetti / AT&T Laboratories Cambridge",
+    "url": "https://ndownloader.figshare.com/files/5976027",
+    "sha256": "b612fb967f2dc77c9c62d3e1266e0c73d5fca46a4b8906c18e454d41af987794",
+    "samples": 400,
+    "subjects": 40,
+    "scope": "Research feasibility only; not webcam or population validation"
+  },
+  "split": {
+    "trainSubjects": [
+      9,
+      19,
+      8,
+      32,
+      14,
+      0,
+      31,
+      34,
+      2,
+      13,
+      30,
+      15,
+      23,
+      18,
+      33,
+      29,
+      37,
+      6,
+      36,
+      24,
+      5,
+      20,
+      16,
+      1
+    ],
+    "calibrationSubjects": [
+      38,
+      27,
+      21,
+      17,
+      28,
+      11,
+      22,
+      12
+    ],
+    "testSubjects": [
+      3,
+      39,
+      25,
+      26,
+      4,
+      7,
+      10,
+      35
+    ]
+  },
+  "training": {
+    "seed": 20261101,
+    "steps": 600,
+    "loss": "reconstruction + 0.08 * pair contrastive, margin 2",
+    "numpy": "2.3.5",
+    "python": "3.12.14"
+  },
+  "integerCalibration": {
+    "limit": 8326.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 27,
+    "falseRejects": 230,
+    "FAR": 0.009642857142857142,
+    "FRR": 0.6388888888888888
+  },
+  "integerTest": {
+    "limit": 8326.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 43,
+    "falseRejects": 285,
+    "FAR": 0.015357142857142857,
+    "FRR": 0.7916666666666666
+  },
+  "floatCalibration": {
+    "limit": 8473.443269146648,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 27,
+    "falseRejects": 229,
+    "FAR": 0.009642857142857142,
+    "FRR": 0.6361111111111111
+  },
+  "quantization": {
+    "maxEmbeddingError": 0.028942887307200404,
+    "rmse": 0.00757927215279511,
+    "maxAccumulatorBound": 3987134
+  },
+  "limitations": [
+    "Small historical controlled dataset",
+    "Pair observations are correlated",
+    "No physical-camera evaluation",
+    "Not an M5 production calibration"
+  ],
+  "floatTest": {
+    "limit": 8473.443269146648,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 48,
+    "falseRejects": 283,
+    "FAR": 0.017142857142857144,
+    "FRR": 0.7861111111111111
+  },
+  "modelSHA256": "7ee1585489b5e1863049317840e6c2bc0d2866c389430cb5f8badd189db89ae6",
+  "modelJSONBytes": 93677
+}

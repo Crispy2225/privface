@@ -1,0 +1,8 @@
+{
+  "format": "privface-zkml-policy-v1",
+  "modelSHA256": "7ee1585489b5e1863049317840e6c2bc0d2866c389430cb5f8badd189db89ae6",
+  "limit": "8326",
+  "calibrated": false,
+  "researchDatasetCalibrated": true,
+  "purpose": "M2/M3 research demonstration; M5 webcam calibration pending"
+}

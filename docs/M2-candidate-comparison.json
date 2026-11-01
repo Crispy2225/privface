@@ -1,0 +1,34 @@
+{
+  "selection": "Compare calibration FRR at empirical calibration FAR <=1%; no production acceptance",
+  "candidates": [
+    {
+      "contrastiveWeight": 0.08,
+      "modelSHA256": "7ee1585489b5e1863049317840e6c2bc0d2866c389430cb5f8badd189db89ae6",
+      "calibration": {
+        "limit": 8326.0,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 27,
+        "falseRejects": 230,
+        "FAR": 0.009642857142857142,
+        "FRR": 0.6388888888888888
+      },
+      "selectedForProofExperiment": true
+    },
+    {
+      "contrastiveWeight": 0,
+      "modelSHA256": "9bcc9e0d0fbbf4f611b17c29d1d427a1ac95fda66683646fa7ac371b00034148",
+      "calibration": {
+        "limit": 76294.0,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 28,
+        "falseRejects": 267,
+        "FAR": 0.01,
+        "FRR": 0.7416666666666667
+      },
+      "selectedForProofExperiment": false
+    }
+  ],
+  "conclusion": "Both models have unacceptable false rejection for practical login; inference/proving feasibility only."
+}

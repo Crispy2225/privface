@@ -11,6 +11,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --test src/*.test.ts",
+    "test:zkml-browser": "node tests/zkml-smoke.mjs",
     "prepare:vision": "node scripts/prepare-vision.mjs && node scripts/prepare-recognition.mjs",
     "predev": "npm run prepare:vision && npm run prepare:study",
     "prebuild": "npm run prepare:vision && npm run prepare:study",

@@ -1,0 +1,15 @@
+PrivFace M2/M3 research model
+
+Training images: Olivetti faces, AT&T Laboratories Cambridge.
+400 images / 40 subjects; modified 64x64 dataset described by scikit-learn:
+https://scikit-learn.org/stable/datasets/real_world.html#olivetti-faces-dataset
+https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/datasets/descr/olivetti_faces.rst
+Pinned dataset SHA256:
+b612fb967f2dc77c9c62d3e1266e0c73d5fca46a4b8906c18e454d41af987794
+
+Raw dataset images are not redistributed in this repository. The trained weights
+are a small research feasibility artifact, not a validated face-login model.
+No commercial dataset/model rights or production fitness are asserted.
+
+Proof tooling: circom2 0.2.22, circomlib 2.0.5, snarkjs 0.7.6.
+setup-ml.mjs copies the snarkjs license alongside its browser runtime.

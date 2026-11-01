@@ -27,5 +27,16 @@ proofs/
 
 /zk/artifacts/
 
+# Reproducible M2/M3 setup; source weights and evidence stay tracked.
+/zk/artifacts-ml/
+/zk/generated/
+/client/public/zkml/manifest.json
+/client/public/zkml/zkml.wasm
+/client/public/zkml/zkml.zkey
+/client/public/zkml/verification_key.json
+/client/public/zkml/poseidon.json
+/client/public/zkml/snarkjs.min.js
+/client/public/zkml/SNARKJS-LICENSE.txt
+
 /client/src/match-policy.previous.json
 /client/src/match-policy.pending.json

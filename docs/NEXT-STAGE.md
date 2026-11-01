@@ -1,8 +1,6 @@
 # Next-stage progress
 
-> Authentication update: [PASSWORD-REGISTRATION.md](PASSWORD-REGISTRATION.md) supersedes all invitation/passkey instructions below. The current app uses open username/password registration followed by face capture.
-
-> Historical milestone. [PRE-ZKML.md](PRE-ZKML.md) is the current guide and supersedes statements below about missing proof integration, recovery UI, and local database provisioning.
+> Archived historical implementation record. Descriptions of passkeys, missing features and old commands below refer to that earlier milestone and do not describe the current app. Use [PASSWORD-REGISTRATION.md](PASSWORD-REGISTRATION.md) for current operation, [PRE-ZKML.md](PRE-ZKML.md) for study/proof scope, and [M1-FACE-FIRST-AUTH.md](M1-FACE-FIRST-AUTH.md) for the face-first target. Do not use this archived file as a setup or current-status guide.
 
 ## Added
 

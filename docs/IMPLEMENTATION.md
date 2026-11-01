@@ -1,10 +1,6 @@
 # PrivFace implementation guide — 21 October 2026
 
-> Authentication update: [PASSWORD-REGISTRATION.md](PASSWORD-REGISTRATION.md) supersedes all invitation/passkey instructions below. The current app uses open username/password registration followed by face capture.
-
-> Historical milestone. [PRE-ZKML.md](PRE-ZKML.md) is the current guide and supersedes statements below about missing proof integration, recovery UI, and local database provisioning.
-
-**Subsequent changes:** see [NEXT-STAGE.md](NEXT-STAGE.md) for recovery/revocation APIs, retention cleanup and the tested ZK descriptor-comparison experiment.
+> Archived historical implementation record. Descriptions of passkeys, missing features and old commands below refer to that earlier milestone and do not describe the current app. Use [PASSWORD-REGISTRATION.md](PASSWORD-REGISTRATION.md) for current operation, [PRE-ZKML.md](PRE-ZKML.md) for study/proof scope, and [M1-FACE-FIRST-AUTH.md](M1-FACE-FIRST-AUTH.md) for the face-first target. Do not use this archived file as a setup or current-status guide.
 
 This guide describes the implementation added for face matching, quantization experiments, server accounts, authorized enrollment, and replay prevention. It supersedes the earlier milestone descriptions in `ISL.pdf` and the old README. Existing encrypted local templates remain readable.
 

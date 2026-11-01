@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "operation": 1,
+      "provingMs": 1078.5999999977648,
+      "verificationMs": 35.100000001490116,
+      "proofBytes": 724
+    },
+    {
+      "operation": 2,
+      "provingMs": 1031,
+      "verificationMs": 34,
+      "proofBytes": 722
+    }
+  ],
+  "invalidEnrollmentRejected": true,
+  "cancellation": true,
+  "timeout": true,
+  "incompatibleTemplateRejected": true,
+  "modelSHA256": "7ee1585489b5e1863049317840e6c2bc0d2866c389430cb5f8badd189db89ae6",
+  "setupId": "e2b9e62d94c649f8b343642e79b1692f35601037305b285ebda27b7d63f011a4",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "jsHeapSnapshotBytes": 3771475,
+  "memoryNote": "JS heap snapshot is not peak WASM/worker/browser memory; M7 memory profiling pending",
+  "assetTamperingRejected": true,
+  "visibleEnrollmentAndMatch": true,
+  "clearSession": true,
+  "mobileLayoutNoOverflow": true,
+  "noExternalOrPostRequests": true,
+  "browserVersion": "156.0.8078.74",
+  "scope": "Real headless Chromium worker proofs with synthetic crops; no physical camera or mobile-device accuracy claim"
+}

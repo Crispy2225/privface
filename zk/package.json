@@ -5,7 +5,11 @@
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "test": "node scripts/test.mjs",
-    "prepare:browser": "node scripts/prepare-browser.mjs"
+    "prepare:browser": "node scripts/prepare-browser.mjs",
+    "train:ml": "python3 ml/train.py",
+    "setup:ml": "node scripts/setup-ml.mjs",
+    "prepare:ml-browser": "node scripts/prepare-ml-browser.mjs",
+    "test:ml": "node scripts/test-ml.mjs"
   },
   "dependencies": {
     "circom2": "0.2.22",

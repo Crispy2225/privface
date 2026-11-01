@@ -1,6 +1,10 @@
 # Username/password registration and face setup
 
-Updated 21 October 2026. This replaces the invitation/passkey flow in earlier documentation.
+Scope note (M2/M3): this guide describes the existing password/face-api/descriptor-proof path. The separate full-inference research implementation is documented in [M2](M2-MODEL-FEASIBILITY.md) and [M3](M3-ZKML.md); it is not enabled for normal login.
+
+Runtime guide for the password-first implementation introduced 21 October 2026. Reviewed for M1 on 1 November 2026. This replaces the invitation/passkey flow in earlier documentation.
+
+The agreed target is now **face-first login with password fallback**, specified in [M1-FACE-FIRST-AUTH.md](M1-FACE-FIRST-AUTH.md). That target is not implemented by this documentation milestone; the steps below describe the running app. See [M1-BASELINE.md](M1-BASELINE.md) for checks rerun on the current source.
 
 ## Start and register atharv
 
@@ -55,7 +59,7 @@ The command requires local database access and writes a private file under ignor
 
 ## Verification
 
-Verified for this change: 39 client tests, 26 API/proof tests on SQLite and PostgreSQL, PostgreSQL migrations/schema checks, the password browser flow, and a successful production build. The running registration page was also checked for removal of invitation/passkey controls and mobile horizontal overflow.
+Historical verification recorded for the 21 October password change (not all rerun for M1): 39 client tests, 26 API/proof tests on SQLite and PostgreSQL, PostgreSQL migrations/schema checks, the password browser flow, and a successful production build. The running registration page was also checked for removal of invitation/passkey controls and mobile horizontal overflow.
 
 - Password/API suite checks signup without invitation, salted hashing, duplicate protection, legacy-account protection/recovery, wrong passwords, session/challenge expiry, CSRF, cross-account/session bindings, replay, concurrent login, recovery, disablement, and rate limits.
 - Existing real Groth16 tests now authenticate through passwords and continue checking altered public inputs, replay, and stale binding/policy/session contexts.
