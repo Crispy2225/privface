@@ -10,7 +10,7 @@ function CameraIcon() {
   return <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5 9.5 3h5L16 5.5h3A2 2 0 0 1 21 7.5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" /><circle cx="12" cy="12.5" r="4" stroke="currentColor" strokeWidth="1.4" /></svg>
 }
 
-export default function CameraCapture({ enrollment, verificationUsername }: { enrollment?: { username: string; displayName: string }; verificationUsername?: string }) {
+export default function CameraCapture({ enrollment, verificationUsername, studyCapture, studyBusy }: { studyCapture?: (photo:string)=>Promise<void>; studyBusy?:boolean; enrollment?: { username: string; displayName: string }; verificationUsername?: string }) {
   const session = useRef(new CameraSession())
   const video = useRef<HTMLVideoElement>(null)
   const mounted = useRef(false)
@@ -134,6 +134,7 @@ export default function CameraCapture({ enrollment, verificationUsername }: { en
     </div>
     <p className="liveness-notice">Prototype movement check. This is not certified spoof protection and may be bypassed by video replays or generated faces.</p>
     <p className="camera-privacy">Photos stay in this page’s memory and are cleared when you leave this step or hide the page.</p>
+    {studyCapture && <button className="primary-button" disabled={!photo || studyBusy} onClick={async()=>{if(photo){await studyCapture(photo);setPhoto(null);stopCamera()}}}>{studyBusy?'Extracting local descriptor…':'Add capture to study'}</button>}
     {verificationUsername && <LocalVerification photo={photo} username={verificationUsername} clearPhoto={() => { setPhoto(null); stopCamera() }} />}
     {enrollment && <LocalEnrollment photo={photo} username={enrollment.username} displayName={enrollment.displayName} clearPhoto={() => { setPhoto(null); stopCamera() }} />}
   </div>

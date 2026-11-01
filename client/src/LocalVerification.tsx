@@ -4,7 +4,9 @@ import { decryptTemplate, EMBEDDING_MODEL } from './template-crypto'
 import { generateEmbedding } from './face-embedding'
 import { compareFaces, QUANTIZATION } from './face-match'
 import policy from './match-policy.json'
-import { loginAccount } from './passkeys'
+import { proofConfig, proveMatch } from './proof-client'
+import { api } from './account-api'
+import type { AccountSession } from './account-api'
 
 export default function LocalVerification({ photo, username, clearPhoto }: { photo: string | null; username: string; clearPhoto: () => void }) {
   const [busy, setBusy] = useState(false)
@@ -30,12 +32,18 @@ export default function LocalVerification({ photo, username, clearPhoto }: { pho
       enrolled = await decryptTemplate(record)
       probe = await generateEmbedding(photo, controller.signal)
       controller.signal.throwIfAborted()
-      const result = compareFaces(enrolled, probe, policy.threshold)
+      const config=await proofConfig(controller.signal)
+      const result = compareFaces(enrolled, probe, config.enabled ? config.policy.threshold : policy.threshold)
       if (!result.matched) { setMessage(`Face did not match (distance ${result.distance.toFixed(3)}, limit ${result.threshold}). Retake in better lighting.`); return }
-      setMessage(`Local face matched (${result.distance.toFixed(3)}). Confirm your passkey to sign in.`)
-      const session = await loginAccount(username, controller.signal)
+      const session=await api<AccountSession>('/session',undefined,undefined,controller.signal)
+      if(session.account.username!==username.toLowerCase())throw new Error('Sign in to the matching account first.')
       controller.signal.throwIfAborted()
-      setMessage(`Signed in as @${session.account.username} using your passkey. Face comparison stayed on this device.`)
+      let proved=false
+      if(config.enabled) {
+        setMessage('Face matched. Creating a private descriptor proof on this device…')
+        await proveMatch(session,record,probe,controller.signal); proved=true
+      }
+      setMessage(`Face matched for @${session.account.username}. ${proved ? 'Server verified the private descriptor comparison.' : 'Face comparison stayed on this device.'}`)
       window.dispatchEvent(new Event('privface-session'))
       clearPhoto()
     } catch (error) {
@@ -46,7 +54,7 @@ export default function LocalVerification({ photo, username, clearPhoto }: { pho
     }
   }
   return <section aria-label="Local face verification">
-    <button className="primary-button" type="button" disabled={!photo || busy} onClick={() => void verify()}>{busy ? 'Verifying…' : 'Compare face & continue with passkey'}</button>
+    <button className="primary-button" type="button" disabled={!photo || busy} onClick={() => void verify()}>{busy ? 'Verifying…' : 'Verify my face'}</button>
     {!policy.calibrated && <p className="implementation-note">Experimental comparison: the acceptance threshold has not been calibrated with participant data.</p>}
     {message && <p role="status" className="camera-feedback">{message}</p>}
   </section>

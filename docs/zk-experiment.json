@@ -1,0 +1,10 @@
+{
+  "syntheticOnly": true,
+  "validProof": true,
+  "tamperedPublicInputsRejected": true,
+  "nonMatchingWitnessRejected": true,
+  "provingMs": 605.266666,
+  "verificationMs": 7.5467499999999745,
+  "proofJsonBytes": 721,
+  "scope": "Private descriptor comparison only; no ML inference or live capture. This report covers the standalone circuit; server/session integration has separate API/browser tests. Single-party development setup."
+}

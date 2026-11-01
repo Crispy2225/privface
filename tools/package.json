@@ -1,0 +1,8 @@
+{
+  "name": "privface-local-tools",
+  "private": true,
+  "type": "module",
+  "scripts": { "dev": "node dev.mjs" },
+  "dependencies": { "embedded-postgres": "18.4.0-beta.17" },
+  "allowScripts": { "@embedded-postgres/darwin-arm64": true, "@embedded-postgres/darwin-x64": true, "@embedded-postgres/linux-x64": true, "@embedded-postgres/win32-x64": true }
+}

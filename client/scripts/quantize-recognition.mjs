@@ -37,4 +37,4 @@ await writeFile(join(output,'face_recognition_model-weights_manifest.json'),JSON
 for (const file of ['tiny_face_detector_model-weights_manifest.json','tiny_face_detector_model-shard1','face_landmark_68_tiny_model-weights_manifest.json','face_landmark_68_tiny_model-shard1','ATTRIBUTION.txt']) await copyFile(new URL(file,root),join(output,file))
 const report={format:'all-uint8-storage-v1',sha256:createHash('sha256').update(bytes).digest('hex'),storedBytes:bytes.length,convertedTensors:reports,inference:'float32 after loading; not integer-only inference',accuracy:'Not evaluated; do not replace enrolled baseline model without a new model ID, calibration, and re-enrollment.'}
 await writeFile(join(output,'quantization-report.json'),JSON.stringify(report,null,2)+'\n')
-console.log(JSON.stringify(report,null,2))
+console.log(`Prepared study model: ${report.storedBytes} bytes, ${reports.length} newly quantized tensors. Inference remains floating-point; participant accuracy awaits collection.`)

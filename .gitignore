@@ -24,3 +24,8 @@ proofs/
 *.sqlite-*
 # Generated experimental weights; reproduce with scripts/quantize-recognition.mjs
 /client/public/vision/recognition-int8/
+
+/zk/artifacts/
+
+/client/src/match-policy.previous.json
+/client/src/match-policy.pending.json

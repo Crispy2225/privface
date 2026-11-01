@@ -1,20 +1,22 @@
-"""Passkey-authenticated accounts. Face checks remain local; no ZK verifier exists."""
+"""Open password registration with local face enrollment and supplementary descriptor proofs."""
 import hashlib
 import hmac
 import json
 import re
 import secrets
 import time
+from typing import Literal
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.exceptions import RequestValidationError
+from .proof_service import ProofService, SCHEME, FIELD, CIRCUIT
 from pydantic import BaseModel, ConfigDict, Field
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 from sqlalchemy.exc import IntegrityError
-from webauthn import generate_authentication_options, generate_registration_options, options_to_json, verify_authentication_response, verify_registration_response
-from webauthn.helpers import bytes_to_base64url, base64url_to_bytes
-from webauthn.helpers.structs import AuthenticatorSelectionCriteria, PublicKeyCredentialDescriptor, ResidentKeyRequirement, UserVerificationRequirement
+from .passwords import hash_password, verify_password
 from .config import Settings, MODEL, QUANTIZATION, COMMITMENT
-from .database import Account, Invitation, Credential, Challenge, Enrollment, LoginSession, RateBucket, connect
+from .database import Account, Invitation, Credential, Challenge, Enrollment, LoginSession, RateBucket, RecoveryCode, connect
 
 COOKIE = 'privface_session'
 
@@ -31,14 +33,32 @@ class Input(BaseModel):
     model_config = ConfigDict(extra='forbid')
 
 class Signup(Input):
-    invitation: str = Field(min_length=32, max_length=256)
+    username: str = Field(pattern=r'^[a-zA-Z0-9_]{3,32}$')
+    display_name: str = Field(min_length=1,max_length=80)
+    password: str = Field(min_length=12,max_length=128,repr=False)
 
 class Login(Input):
     username: str = Field(pattern=r'^[a-zA-Z0-9_]{3,32}$')
 
 class Finish(Input):
     challenge_id: str = Field(min_length=36, max_length=36)
-    credential: dict
+
+class PasswordFinish(Finish):
+    password: str = Field(min_length=1,max_length=128,repr=False)
+
+class NewPasswordFinish(Finish):
+    password: str = Field(min_length=12,max_length=128,repr=False)
+
+class ProofFinish(Input):
+    challenge_id: str = Field(min_length=36, max_length=36)
+    proof: dict
+    publicSignals: list[str] = Field(min_length=6, max_length=6)
+
+class Recovery(Input):
+    recovery_code: str = Field(min_length=32, max_length=256)
+
+class SecurityAction(Input):
+    action: Literal['recovery-code', 'revoke-binding', 'logout-all', 'disable-account']
 
 class Binding(Input):
     commitment: str = Field(pattern=r'^[0-9a-f]{64}$')
@@ -55,11 +75,22 @@ def create_app(settings: Settings | None = None):
         yield
         app.state.engine.dispose()
 
-    app = FastAPI(title='PrivFace API', version='0.2.0', lifespan=lifespan)
+    app = FastAPI(title='PrivFace API', version='0.4.0', lifespan=lifespan)
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_error(request,exc):
+        return JSONResponse(status_code=422,content={'detail':'Invalid request. Check required fields, username format, and password length (12–128 characters for a new password).'})
+
+    def password_limit(challenge_id):
+        with app.state.db() as db:
+            ch=db.get(Challenge,challenge_id)
+            identity=ch.account_id if ch else challenge_id
+        limit('password:'+identity,12)
 
     def configure(config):
         app.state.settings = config
         app.state.engine, app.state.db = connect(config.database_url)
+        app.state.proofs = ProofService(config) if config.proof_enabled else None
 
     if settings:
         configure(settings)
@@ -109,15 +140,16 @@ def create_app(settings: Settings | None = None):
         token = request.cookies.get(COOKIE, '')
         row = db.get(LoginSession, digest(token)) if token else None
         if not row or row.revoked or row.expires_at <= now():
-            reject('Sign in with your passkey first', 401)
+            reject('Sign in with your username and password first', 401)
         account = db.get(Account, row.account_id)
-        if not account or not account.active:
+        if not account or not account.active or not account.password_hash:
             reject('Account unavailable', 401)
         if csrf and not hmac.compare_digest(row.csrf, request.headers.get('x-csrf-token', '')):
             reject('CSRF check failed', 403)
         return row, account
 
     def issue_session(db, account, response, request):
+        if not account.active: reject()
         old = request.cookies.get(COOKIE)
         if old:
             db.execute(update(LoginSession).where(LoginSession.digest == digest(old)).values(revoked=True))
@@ -125,7 +157,7 @@ def create_app(settings: Settings | None = None):
         row = LoginSession(digest=digest(token), account_id=account.id, csrf=secrets.token_urlsafe(32), expires_at=now() + app.state.settings.session_seconds)
         db.add(row)
         response.set_cookie(COOKIE, token, httponly=True, secure=app.state.settings.secure_cookie, samesite='strict', max_age=app.state.settings.session_seconds, path='/api')
-        return {'account': {'id': account.id, 'username': account.username, 'display_name': account.display_name}, 'csrf': row.csrf, 'authentication': 'passkey'}
+        return {'account': {'id': account.id, 'username': account.username, 'display_name': account.display_name}, 'csrf': row.csrf, 'authentication': 'password'}
 
     def new_challenge(db, account_id, operation, **kwargs):
         limit('account:' + account_id, 12)
@@ -134,93 +166,74 @@ def create_app(settings: Settings | None = None):
         db.flush()
         return row
 
+    def lock_account(db, account_id):
+        return db.scalar(select(Account).where(Account.id == account_id).with_for_update().execution_options(populate_existing=True))
+
     def consume(db, challenge_id, operation):
+        pending = db.get(Challenge, challenge_id)
+        if not pending or pending.operation != operation: reject()
+        lock_account(db, pending.account_id)
         # UPDATE ... RETURNING is atomic: concurrent requests cannot both succeed.
         row = db.execute(update(Challenge).where(Challenge.id == challenge_id, Challenge.operation == operation, Challenge.consumed.is_(False), Challenge.expires_at > now()).values(consumed=True).returning(Challenge)).scalar_one_or_none()
         if not row:
             reject()
         return row
 
-    def auth_options(db, challenge):
-        config = app.state.settings
-        return {'challenge_id': challenge.id, 'publicKey': json.loads(options_to_json(generate_authentication_options(
-            rp_id=config.rp_id, challenge=challenge.nonce, timeout=config.challenge_seconds * 1000,
-            allow_credentials=[PublicKeyCredentialDescriptor(id=base64url_to_bytes(challenge.credential_id))], user_verification=UserVerificationRequirement.REQUIRED,
-        )))}
-
-    def assertion(db, challenge, credential):
-        stored = db.scalar(select(Credential).where(Credential.id == challenge.credential_id).with_for_update())
-        if not stored or stored.account_id != challenge.account_id:
-            reject()
-        if credential.get('id') != stored.id:
-            reject()
-        try:
-            user_handle = credential.get('response', {}).get('userHandle')
-            if user_handle and base64url_to_bytes(user_handle) != challenge.account_id.encode():
-                reject()
-            verified = verify_authentication_response(credential=credential, expected_challenge=challenge.nonce, expected_rp_id=app.state.settings.rp_id, expected_origin=app.state.settings.origin, credential_public_key=stored.public_key, credential_current_sign_count=stored.sign_count, require_user_verification=True)
-        except Exception:
-            reject('Passkey verification failed')
-        stored.sign_count = verified.new_sign_count
-        return stored
-
     @app.get('/api/health')
     def health():
         return {'status': 'ok', 'service': 'isl-verification-server', 'version': app.version}
 
-    @app.post('/api/accounts/options')
-    def signup_options(body: Signup):
-        with app.state.db.begin() as db:
-            invite = db.get(Invitation, digest(body.invitation))
-            if not invite or invite.used or invite.expires_at <= now(): reject()
-            account = db.get(Account, invite.account_id)
-            if account.active: reject()
-            ch = new_challenge(db, account.id, 'register', payload={'invitation': invite.digest})
-            options = generate_registration_options(rp_id=app.state.settings.rp_id, rp_name='PrivFace', user_id=account.id.encode(), user_name=account.username, user_display_name=account.display_name, challenge=ch.nonce, timeout=app.state.settings.challenge_seconds * 1000, authenticator_selection=AuthenticatorSelectionCriteria(resident_key=ResidentKeyRequirement.PREFERRED, user_verification=UserVerificationRequirement.REQUIRED))
-            return {'challenge_id': ch.id, 'username': account.username, 'publicKey': json.loads(options_to_json(options))}
-
-    @app.post('/api/accounts/verify')
-    def signup_verify(body: Finish, response: Response, request: Request):
+    @app.post('/api/accounts/register')
+    def signup(body: Signup, response: Response, request: Request):
+        if not body.display_name.strip(): reject('Enter a display name')
+        password_hash=hash_password(body.password)
         try:
             with app.state.db.begin() as db:
-                ch = consume(db, body.challenge_id, 'register')
-                invite = db.execute(update(Invitation).where(Invitation.digest == ch.payload['invitation'], Invitation.used.is_(False), Invitation.expires_at > now()).values(used=True).returning(Invitation)).scalar_one_or_none()
-                if not invite or invite.account_id != ch.account_id: reject()
-                account = db.get(Account, ch.account_id)
-                if account.active: reject()
-                try:
-                    result = verify_registration_response(credential=body.credential, expected_challenge=ch.nonce, expected_rp_id=app.state.settings.rp_id, expected_origin=app.state.settings.origin, require_user_verification=True)
-                except Exception:
-                    reject('Passkey registration failed')
-                db.add(Credential(id=bytes_to_base64url(result.credential_id), account_id=account.id, public_key=result.credential_public_key, sign_count=result.sign_count))
-                account.active = True
-                return issue_session(db, account, response, request)
-        except IntegrityError:
-            reject('Account or credential is already registered', 409)
+                account=db.scalar(select(Account).where(Account.username==body.username.lower()).with_for_update())
+                if account:
+                    # Only an UNUSED operator reservation can become an open signup.
+                    # Active/disabled accounts and existing credentials stay protected.
+                    invite=db.scalar(select(Invitation).where(Invitation.account_id==account.id))
+                    credential=db.scalar(select(Credential).where(Credential.account_id==account.id))
+                    if account.active or account.password_hash or credential or not invite or invite.used:
+                        reject('Username already registered. Sign in or recover your account.',409)
+                    invite.used=True
+                    db.execute(update(Challenge).where(Challenge.account_id==account.id).values(consumed=True))
+                else:
+                    account=Account(username=body.username.lower())
+                    db.add(account)
+                account.display_name=body.display_name.strip()
+                account.password_hash=password_hash
+                account.active=True
+                db.flush()
+                return issue_session(db,account,response,request)
+        except IntegrityError: reject('Username already registered. Choose another username.',409)
 
     @app.post('/api/login/options')
     def login_options(body: Login):
         with app.state.db.begin() as db:
-            account = db.scalar(select(Account).where(Account.username == body.username.lower(), Account.active.is_(True)))
-            credential = db.scalar(select(Credential).where(Credential.account_id == account.id)) if account else None
-            if not credential: reject('No available passkey for this account', 404)
-            return auth_options(db, new_challenge(db, account.id, 'login', credential_id=credential.id))
+            account=db.scalar(select(Account).where(Account.username==body.username.lower(),Account.active.is_(True)))
+            if not account or not account.password_hash: reject('Username or password is incorrect',401)
+            ch=new_challenge(db,account.id,'login')
+            return {'challenge_id':ch.id}
 
     @app.post('/api/login/verify')
-    def login_verify(body: Finish, response: Response, request: Request):
+    def login_verify(body: PasswordFinish,response: Response,request: Request):
+        password_limit(body.challenge_id)
         with app.state.db.begin() as db:
-            ch = consume(db, body.challenge_id, 'login')
-            account = db.get(Account, ch.account_id)
-            if not account.active: reject()
-            assertion(db, ch, body.credential)
-            return issue_session(db, account, response, request)
+            ch=consume(db,body.challenge_id,'login')
+            account=db.get(Account,ch.account_id)
+            if not account.active or not verify_password(body.password,account.password_hash): reject('Username or password is incorrect',401)
+            return issue_session(db,account,response,request)
 
     @app.get('/api/session')
     def get_session(request: Request):
         with app.state.db() as db:
             current, account = session(db, request)
             enrollment = db.get(Enrollment, account.id)
-            return {'account': {'id': account.id, 'username': account.username, 'display_name': account.display_name}, 'csrf': current.csrf, 'authentication': 'passkey', 'enrollment': {'commitment': enrollment.commitment, 'version': enrollment.version, 'model': enrollment.model, 'quantization': enrollment.quantization, 'scheme': enrollment.scheme} if enrollment else None}
+            context = current.proof_context
+            if context and (not enrollment or not app.state.proofs or context.get('commitment') != enrollment.commitment or context.get('version') != enrollment.version or context.get('setup_id') != app.state.proofs.setup_id or context.get('limit') != app.state.proofs.policy()['limit']): context = None
+            return {'account': {'id': account.id, 'username': account.username, 'display_name': account.display_name}, 'csrf': current.csrf, 'authentication': 'password', 'descriptor_proof': context, 'enrollment': {'commitment': enrollment.commitment, 'version': enrollment.version, 'model': enrollment.model, 'quantization': enrollment.quantization, 'scheme': enrollment.scheme} if enrollment else None}
 
     @app.post('/api/logout')
     def logout(request: Request, response: Response):
@@ -230,35 +243,152 @@ def create_app(settings: Settings | None = None):
             response.delete_cookie(COOKIE, path='/api')
             return {'ok': True}
 
+    def require_current(db,request):
+        current,account=session(db,request,csrf=True)
+        account=lock_account(db,account.id)
+        db.refresh(current)
+        if not account.active or not account.password_hash or current.revoked or current.expires_at<=now():reject('Sign in again',401)
+        return current,account
+
     @app.post('/api/enrollment/options')
-    def enrollment_options(body: Binding, request: Request):
-        if (body.model, body.quantization, body.scheme) != (MODEL, QUANTIZATION, COMMITMENT):
-            reject('Unsupported template or commitment version')
+    def enrollment_options(body: Binding,request: Request):
+        if body.model!=MODEL or body.quantization!=QUANTIZATION or body.scheme not in (COMMITMENT,SCHEME):reject('Unsupported template or commitment version')
+        if body.scheme==SCHEME and (not app.state.proofs or not 0<int(body.commitment,16)<FIELD):reject('Proof binding unavailable or invalid')
         with app.state.db.begin() as db:
-            current, account = session(db, request, csrf=True)
-            credential = db.scalar(select(Credential).where(Credential.account_id == account.id))
-            ch = new_challenge(db, account.id, 'enroll', credential_id=credential.id, session_digest=current.digest, payload=body.model_dump())
-            return auth_options(db, ch)
+            current,account=require_current(db,request)
+            ch=new_challenge(db,account.id,'enroll',session_digest=current.digest,payload=body.model_dump())
+            return {'challenge_id':ch.id}
 
     @app.post('/api/enrollment/verify')
-    def enrollment_verify(body: Finish, request: Request):
+    def enrollment_verify(body: Finish,request: Request):
         with app.state.db.begin() as db:
-            current, account = session(db, request, csrf=True)
-            ch = consume(db, body.challenge_id, 'enroll')
-            if ch.account_id != account.id or ch.session_digest != current.digest: reject()
-            credential = assertion(db, ch, body.credential)
-            # Serialize enrollment updates on the account even for an initial insert.
-            db.execute(select(Account).where(Account.id == account.id).with_for_update()).scalar_one()
-            row = db.get(Enrollment, account.id)
+            current,account=require_current(db,request)
+            ch=consume(db,body.challenge_id,'enroll')
+            if ch.account_id!=account.id or ch.session_digest!=current.digest:reject()
+            row=db.get(Enrollment,account.id)
             if not row:
-                row = Enrollment(account_id=account.id, version=0)
+                row=Enrollment(account_id=account.id,version=0)
                 db.add(row)
-            row.credential_id = credential.id
-            row.commitment, row.model = ch.payload['commitment'], ch.payload['model']
-            row.quantization, row.scheme = ch.payload['quantization'], ch.payload['scheme']
-            row.version += 1
-            row.updated_at = now()
-            return {'bound': True, 'version': row.version, 'commitment': row.commitment}
+            row.credential_id=None
+            row.commitment,row.model=ch.payload['commitment'],ch.payload['model']
+            row.quantization,row.scheme=ch.payload['quantization'],ch.payload['scheme']
+            row.version+=1;row.updated_at=now()
+            db.flush()
+            db.execute(update(LoginSession).where(LoginSession.account_id==account.id).values(proof_context=None))
+            db.execute(update(Challenge).where(Challenge.account_id==account.id,Challenge.operation=='proof').values(consumed=True))
+            return {'bound':True,'version':row.version,'commitment':row.commitment}
+
+    @app.post('/api/security/options')
+    def security_options(body: SecurityAction,request: Request):
+        with app.state.db.begin() as db:
+            current,account=require_current(db,request)
+            ch=new_challenge(db,account.id,'security',session_digest=current.digest,payload={'action':body.action})
+            return {'challenge_id':ch.id}
+
+    @app.post('/api/security/verify')
+    def security_verify(body: PasswordFinish,request: Request,response: Response):
+        password_limit(body.challenge_id)
+        with app.state.db.begin() as db:
+            current,account=require_current(db,request)
+            ch=consume(db,body.challenge_id,'security')
+            if ch.account_id!=account.id or ch.session_digest!=current.digest:reject()
+            if not verify_password(body.password,account.password_hash):reject('Password is incorrect',401)
+            action=ch.payload['action']
+            if action=='recovery-code':
+                code=secrets.token_urlsafe(32)
+                record=db.get(RecoveryCode,account.id)
+                if not record:record=RecoveryCode(account_id=account.id);db.add(record)
+                record.digest,record.used,record.created_at=digest(code),False,now()
+                return {'recovery_code':code}
+            if action=='revoke-binding':
+                db.execute(delete(Enrollment).where(Enrollment.account_id==account.id))
+                db.execute(update(LoginSession).where(LoginSession.account_id==account.id).values(proof_context=None))
+                db.execute(update(Challenge).where(Challenge.account_id==account.id,Challenge.operation.in_(['enroll','proof'])).values(consumed=True))
+                return {'revoked':True}
+            if action=='disable-account':
+                account.active=False
+                db.execute(delete(Enrollment).where(Enrollment.account_id==account.id))
+                db.execute(delete(RecoveryCode).where(RecoveryCode.account_id==account.id))
+            db.execute(update(LoginSession).where(LoginSession.account_id==account.id).values(revoked=True))
+            db.execute(update(Challenge).where(Challenge.account_id==account.id).values(consumed=True))
+            response.delete_cookie(COOKIE,path='/api')
+            return {'revoked':True}
+
+    @app.post('/api/recovery/options')
+    def recovery_options(body: Recovery):
+        with app.state.db.begin() as db:
+            code=db.scalar(select(RecoveryCode).where(RecoveryCode.digest==digest(body.recovery_code),RecoveryCode.used.is_(False)))
+            if not code:reject()
+            account=lock_account(db,code.account_id)
+            if not account.active:reject()
+            ch=new_challenge(db,account.id,'recover',payload={'recovery_digest':code.digest})
+            return {'challenge_id':ch.id}
+
+    @app.post('/api/recovery/verify')
+    def recovery_verify(body: NewPasswordFinish,request: Request,response: Response):
+        password_limit(body.challenge_id)
+        with app.state.db.begin() as db:
+            ch=consume(db,body.challenge_id,'recover')
+            account=db.get(Account,ch.account_id)
+            if not account.active:reject()
+            code=db.execute(update(RecoveryCode).where(RecoveryCode.account_id==account.id,RecoveryCode.digest==ch.payload['recovery_digest'],RecoveryCode.used.is_(False)).values(used=True).returning(RecoveryCode)).scalar_one_or_none()
+            if not code:reject()
+            account.password_hash=hash_password(body.password)
+            db.execute(delete(Enrollment).where(Enrollment.account_id==account.id))
+            db.execute(update(Challenge).where(Challenge.account_id==account.id).values(consumed=True))
+            db.execute(update(LoginSession).where(LoginSession.account_id==account.id).values(revoked=True))
+            return issue_session(db,account,response,request)
+
+    @app.get('/api/proof/config')
+    def proof_config():
+        return app.state.proofs.config() if app.state.proofs else {'enabled':False}
+
+    @app.get('/api/proof/assets/{name}')
+    def proof_asset(name: str):
+        service=app.state.proofs
+        if not service or name not in service.assets: reject('Artifact unavailable',404)
+        return FileResponse(service.directory / service.assets[name]['path'], media_type='application/wasm' if name.endswith('.wasm') else 'application/octet-stream')
+
+    @app.post('/api/proof/options')
+    def proof_options(body: Input, request: Request):
+        service=app.state.proofs
+        if not service: reject('Proof verification is not configured',503)
+        with app.state.db.begin() as db:
+            current, account=session(db,request,csrf=True)
+            account=lock_account(db,account.id)
+            db.refresh(current)
+            if not account.active or current.revoked or current.expires_at<=now(): reject()
+            binding=db.get(Enrollment,account.id)
+            if not binding or binding.scheme!=SCHEME: reject('Authorize a proof-compatible local template binding first',409)
+            policy=service.policy()
+            ch=new_challenge(db,account.id,'proof',credential_id=binding.credential_id,session_digest=current.digest,payload={
+                'commitment':binding.commitment,'version':binding.version,'limit':policy['limit'],'setup_id':service.setup_id})
+            expected={'account':str(int(account.id.replace('-',''),16)),'nonce':str(int.from_bytes(ch.nonce[:31],'big')),'enrollmentRoot':str(int(binding.commitment,16)),'limit':policy['limit'],'modelTag':'1'}
+            return {'challenge_id':ch.id,'expires_at':ch.expires_at,'inputs':expected,'commitment':binding.commitment,'version':binding.version,'config':service.config()}
+
+    @app.post('/api/proof/verify')
+    def proof_verify(body: ProofFinish, request: Request):
+        service=app.state.proofs
+        if not service: reject('Proof verification is not configured',503)
+        # First authenticate and snapshot the public context. Expensive verification
+        # occurs outside the transaction. Recheck everything under the account lock.
+        with app.state.db() as db:
+            current,account=session(db,request,csrf=True)
+            ch=db.get(Challenge,body.challenge_id)
+            if not ch or ch.operation!='proof' or ch.consumed or ch.expires_at<=now() or ch.account_id!=account.id or ch.session_digest!=current.digest: reject()
+            expected={'account':str(int(account.id.replace('-',''),16)),'nonce':str(int.from_bytes(ch.nonce[:31],'big')),'enrollmentRoot':str(int(ch.payload['commitment'],16)),'limit':ch.payload['limit'],'modelTag':'1'}
+        try: valid=service.verify(body.proof,body.publicSignals,expected)
+        except RuntimeError: reject('Verifier busy; retry shortly',503)
+        if not valid: reject('Invalid descriptor proof')
+        with app.state.db.begin() as db:
+            current,account=session(db,request,csrf=True)
+            ch=consume(db,body.challenge_id,'proof')
+            db.refresh(current); db.refresh(account)
+            binding=db.get(Enrollment,account.id)
+            if not account.active or current.revoked or current.expires_at<=now() or ch.session_digest!=current.digest or ch.account_id!=account.id: reject()
+            if not binding or binding.scheme!=SCHEME or binding.commitment!=ch.payload['commitment'] or binding.version!=ch.payload['version'] or service.setup_id!=ch.payload['setup_id'] or service.policy()['limit']!=ch.payload['limit']: reject('Binding or policy changed; start again')
+            current.proof_context={**ch.payload,'verified_at':now(),'circuit':CIRCUIT}
+            return {'verified':True,'scope':'private-descriptor-comparison','authentication':'password','verified_at':now()}
 
     return app
 

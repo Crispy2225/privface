@@ -1,8 +1,11 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import CameraCapture from './CameraCapture'
+import StudyCollection from './StudyCollection'
 import ThemeToggle from './ThemeToggle'
 import AccountAccess from './AccountAccess'
+import { api, registerAccount, loginAccount } from './account-api'
+import type { AccountSession } from './account-api'
 
 type Mode = 'login' | 'register'
 type Connection = 'checking' | 'connected' | 'offline'
@@ -54,71 +57,66 @@ function ServerStatus() {
 }
 
 function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
-  const isRegister = mode === 'register'
-  const [step, setStep] = useState<'details' | 'face'>('details')
-  const [name, setName] = useState('')
-  const [username, setUsername] = useState('')
-  const [consent, setConsent] = useState(false)
-  const headingRef = useRef<HTMLHeadingElement>(null)
-  const id = useId()
-
-  useEffect(() => { if (step === 'face') headingRef.current?.focus() }, [step])
-
-  function continueToFace(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setStep('face')
+  const isRegister=mode==='register'
+  const [session,setSession]=useState<AccountSession|null>(null)
+  const [checking,setChecking]=useState(true),[busy,setBusy]=useState(false)
+  const [username,setUsername]=useState('')
+  const [password,setPassword]=useState(''),[confirm,setConfirm]=useState(''),[consent,setConsent]=useState(false)
+  const [message,setMessage]=useState('')
+  const active=useRef<AbortController|null>(null),id=useId()
+  function accept(value:AccountSession|null){setSession(value);if(value){setUsername(value.account.username)}}
+  useEffect(()=>{
+    const controller=new AbortController()
+    const refresh=()=>{void api<AccountSession>('/session',undefined,undefined,controller.signal).then(value=>{if(!controller.signal.aborted)accept(value)}).catch(()=>{if(!controller.signal.aborted)setSession(null)}).finally(()=>{if(!controller.signal.aborted)setChecking(false)})}
+    refresh();window.addEventListener('privface-session',refresh)
+    return()=>{controller.abort();active.current?.abort();window.removeEventListener('privface-session',refresh)}
+  },[])
+  async function submit(event:FormEvent<HTMLFormElement>){
+    event.preventDefault();if(active.current)return
+    if(isRegister&&password!==confirm){setMessage('Passwords do not match.');return}
+    const controller=new AbortController();active.current=controller;setBusy(true);setMessage('')
+    try{
+      const result=isRegister?await registerAccount(username,username,password,controller.signal):await loginAccount(username,password,controller.signal)
+      controller.signal.throwIfAborted();accept(result)
+    }catch(error){if(!controller.signal.aborted)setMessage(error instanceof Error?error.message:'Unable to continue.')}
+    finally{setPassword('');setConfirm('');if(active.current===controller){active.current=null;setBusy(false)}}
   }
-
   return <section className="auth-panel" aria-labelledby={`${id}-title`}>
     <div className="mode-switch" aria-label="Choose login or registration">
-      <button type="button" aria-pressed={!isRegister} onClick={() => { if (isRegister) onSwitch() }}>Log in</button>
-      <button type="button" aria-pressed={isRegister} onClick={() => { if (!isRegister) onSwitch() }}>Register</button>
+      <button type="button" disabled={busy} aria-pressed={!isRegister} onClick={()=>{if(isRegister)onSwitch()}}>{session?'Verify face':'Log in'}</button>
+      <button type="button" disabled={busy} aria-pressed={isRegister} onClick={()=>{if(!isRegister)onSwitch()}}>{session?'Set up face':'Register'}</button>
     </div>
-
-    <AccountAccess username={username} onAccount={(user, display) => { setUsername(user); setName(display) }} />
-
     <div className="panel-heading">
-      <span className="eyebrow">{isRegister ? 'CREATE YOUR PRIVFACE ACCOUNT' : 'YOUR PRIVFACE ACCOUNT'}</span>
-      <h2 ref={headingRef} tabIndex={-1} id={`${id}-title`}>{step === 'face' ? (isRegister ? 'Set up your face.' : 'Verify it’s you.') : (isRegister ? 'Hello, you.' : 'Welcome back.')}</h2>
-      <p>{step === 'face' ? (isRegister ? 'Start with a clear photo. Your camera preview stays on this device.' : 'Compare a fresh photo locally, then confirm your passkey.') : (isRegister ? 'Create your account, then register your face once.' : 'Enter your username to continue with face verification.')}</p>
+      <h2 id={`${id}-title`}>{session?(isRegister?'Set up your face.':'You’re signed in.'):(isRegister?'Create your account.':'Welcome back.')}</h2>
+      <p>{session?(isRegister?'Your account is ready. Capture and save your face to finish face setup.':'You can optionally verify your face on this browser.'):(isRegister?'Choose a username and password, then capture your face.':'Sign in with your username and password.')}</p>
     </div>
-
-    <ol className="steps" aria-label={isRegister ? 'Registration steps' : 'Login steps'}>
-      <li aria-current={step === 'details' ? 'step' : undefined} className={step === 'face' ? 'completed' : ''}><span>{step === 'face' ? '✓' : '1'}</span>{isRegister ? 'Your details' : 'Your account'}</li>
-      <li aria-current={step === 'face' ? 'step' : undefined}><span>2</span>{isRegister ? 'Register face' : 'Verify face'}</li>
-    </ol>
-
-    {step === 'details' ? <form onSubmit={continueToFace}>
-      {isRegister && <div className="field"><label htmlFor={`${id}-name`}>Display name</label><input id={`${id}-name`} name="name" autoComplete="name" placeholder="Your name" value={name} onChange={e => setName(e.target.value)} maxLength={80} pattern=".*\S.*" required /></div>}
-      <div className="field"><label htmlFor={`${id}-username`}>Username</label><input id={`${id}-username`} name="username" autoComplete="username" autoCapitalize="none" spellCheck={false} placeholder="e.g. atharv" value={username} onChange={e => setUsername(e.target.value)} minLength={3} maxLength={32} pattern="[a-zA-Z0-9_]{3,32}" title="Use 3–32 letters, numbers, or underscores." aria-describedby={`${id}-username-help`} required /><p className="field-hint" id={`${id}-username-help`}>{isRegister ? '3–32 letters, numbers, or underscores.' : 'Use the username you chose during registration.'}</p></div>
-      {isRegister && <label className="consent"><input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required /><span>I understand that face enrollment will be set up on this device.</span></label>}
-      <button className="primary-button" type="submit">{isRegister ? 'Continue to face setup' : 'Continue to face verification'}<span aria-hidden="true">→</span></button>
-      <p className="under-button"><LockIcon />No password to create or remember.</p>
-    </form> : <div className="face-step">
-      <div className="account-chip"><span className="avatar">{(isRegister ? name.trim() : username).slice(0, 1).toUpperCase()}</span><span>{isRegister ? name.trim() : username}<small>@{username}</small></span><button className="text-button" onClick={() => setStep('details')}>Edit</button></div>
-      <CameraCapture key={username} enrollment={isRegister ? { username, displayName: name } : undefined} verificationUsername={isRegister ? undefined : username} />
-      <p className="implementation-note" id={`${id}-unavailable`}>{isRegister ? 'Local registration saves a face template for this browser. Use the server-account panel to authorize its binding with your passkey.' : 'Face comparison stays local. Server sign-in requires your passkey; ZK verification is not yet implemented.'}</p>
-      <button className="back-button" type="button" onClick={() => setStep('details')}>← Back to {isRegister ? 'your details' : 'your account'}</button>
-    </div>}
-
-    <p className="switch-prompt">{isRegister ? 'Already registered?' : 'New to PrivFace?'} <button className="text-button" onClick={onSwitch}>{isRegister ? 'Log in' : 'Create an account'} <span aria-hidden="true">↗</span></button></p>
+    {checking?<p role="status">Checking your session…</p>:!session?<form onSubmit={submit}>
+      <div className="field"><label htmlFor={`${id}-username`}>Username</label><input id={`${id}-username`} value={username} onChange={e=>setUsername(e.target.value)} autoComplete="username" autoCapitalize="none" spellCheck={false} pattern="[a-zA-Z0-9_]{3,32}" minLength={3} maxLength={32} title="Use 3–32 letters, numbers, or underscores." required /></div>
+      <div className="field"><label htmlFor={`${id}-password`}>Password</label><input id={`${id}-password`} type="password" value={password} onChange={e=>setPassword(e.target.value)} autoComplete={isRegister?'new-password':'current-password'} minLength={isRegister?12:1} maxLength={128} required />{isRegister&&<p className="field-hint">Use 12–128 characters. A long, unique passphrase works well.</p>}</div>
+      {isRegister&&<><div className="field"><label htmlFor={`${id}-confirm`}>Confirm password</label><input id={`${id}-confirm`} type="password" autoComplete="new-password" value={confirm} onChange={e=>setConfirm(e.target.value)} maxLength={128} required /></div><label className="consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} required /><span>I agree to set up my face enrollment locally on this browser.</span></label></>}
+      <button className="primary-button" disabled={busy} type="submit">{busy?'Please wait…':isRegister?'Create account & capture face':'Log in'}</button>
+      {message&&<p className="camera-error" role="alert">{message}</p>}
+    </form>:<CameraCapture key={session.account.id+mode} enrollment={isRegister?{username:session.account.username,displayName:session.account.display_name}:undefined} verificationUsername={isRegister?undefined:session.account.username} />}
+    {!checking&&<AccountAccess session={session} onSession={accept} />}
+    {!session&&<p className="switch-prompt">{isRegister?'Already registered?':'New to PrivFace?'} <button className="text-button" disabled={busy} onClick={onSwitch}>{isRegister?'Log in':'Create an account'}</button></p>}
   </section>
 }
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('login')
+  if(window.location.pathname==='/study') return <StudyCollection />
   return <div className="page-shell">
-    <header className="site-header"><a className="brand" href="/" aria-label="PrivFace home"><FaceMark small /><span>privface<span className="brand-period">.</span></span></a><nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><span className="project-label"><LockIcon /> On-device privacy</span><ThemeToggle /></nav></header>
+    <header className="site-header"><a className="brand" href="/" aria-label="PrivFace home"><FaceMark small /><span>privface<span className="brand-period">.</span></span></a><nav aria-label="Main navigation"><a href="/study">Calibration study</a><a href="#how-it-works">How it works</a><span className="project-label"><LockIcon /> On-device privacy</span><ThemeToggle /></nav></header>
     <main className="auth-layout">
       <section className="intro" aria-labelledby="intro-title">
         <span className="privacy-pill"><span />INTRODUCING PRIVFACE</span>
         <h1 id="intro-title">Simply you.<br /><em>Securely in.</em></h1>
         <p className="intro-description">A more personal way to sign in. Designed to recognize you while keeping your face data yours.</p>
         <div className="face-art" aria-hidden="true"><div className="art-glow" /><div className="orbit orbit-one" /><div className="orbit orbit-two" /><div className="art-core"><FaceMark /></div><span className="art-label"><LockIcon /> Your face. Your device.</span><i className="orbit-dot dot-one" /><i className="orbit-dot dot-two" /></div>
-        <div className="principles" id="how-it-works"><div><span>01</span><strong>Enroll once</strong><p>A face setup for your account.</p></div><div><span>02</span><strong>Verify locally</strong><p>Your face stays on your device.</p></div><div><span>03</span><strong>Authorize access</strong><p>Authorize with your passkey.</p></div></div>
-        <p className="design-note">Local face matching and passkey authorization. Zero-knowledge proofs are a future stage.</p>
+        <div className="principles" id="how-it-works"><div><span>01</span><strong>Enroll once</strong><p>A face setup for your account.</p></div><div><span>02</span><strong>Verify locally</strong><p>Your face stays on your device.</p></div><div><span>03</span><strong>Authorize access</strong><p>Sign in with your password.</p></div></div>
+        <p className="design-note">Username-and-password accounts with optional local face verification. Face images stay on your device.</p>
       </section>
-      <div className="form-column"><AuthForm key={mode} mode={mode} onSwitch={() => setMode(current => current === 'login' ? 'register' : 'login')} /><div className="preview-note"><LockIcon /><span>Built for your eyes only.</span>Face enrollment stays in this browser. Passkeys authorize sign-in.</div></div>
+      <div className="form-column"><AuthForm key={mode} mode={mode} onSwitch={() => setMode(current => current === 'login' ? 'register' : 'login')} /><div className="preview-note"><LockIcon /><span>Built for your eyes only.</span>Face enrollment stays in this browser. Passwords authorize sign-in.</div></div>
     </main>
     <footer className="site-footer"><span>PrivFace · Privacy-preserving face authentication</span><ServerStatus /></footer>
   </div>

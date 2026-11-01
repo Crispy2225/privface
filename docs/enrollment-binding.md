@@ -1,5 +1,7 @@
 # Enrollment and account binding
 
+> Authentication update: [PASSWORD-REGISTRATION.md](PASSWORD-REGISTRATION.md) supersedes all invitation/passkey instructions below. The current app uses open username/password registration followed by face capture.
+
 The implementation and protocol are documented in [IMPLEMENTATION.md](IMPLEMENTATION.md), especially sections 3, 7 and 8.
 
 Local templates are still AES-256-GCM encrypted in IndexedDB, with their non-extractable keys stored locally. The API now supports invitation-authorized passkey registration, passkey login, sessions, and fresh passkey authorization of account-bound blinded commitments. It validates expiring, single-use challenges transactionally.

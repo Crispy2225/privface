@@ -1,35 +1,33 @@
-"""Operator-created, account-specific, expiring invitations (never an HTTP endpoint)."""
+"""Local operator recovery for existing accounts; no invitation or public reset endpoint."""
 import argparse
+import os
 import secrets
-import re
-from sqlalchemy import select
+from pathlib import Path
+from sqlalchemy import select,update
 from .config import Settings
-from .database import Account, Invitation, connect
-from .main import digest, now
+from .database import Account,RecoveryCode,Challenge,connect
+from .main import digest,now
 
-
-def issue_invitation(factory, username, display_name, hours=24):
-    username = username.lower()
-    if not re.fullmatch(r'[a-z0-9_]{3,32}', username) or not display_name.strip() or len(display_name) > 80 or not 1 <= hours <= 168:
-        raise ValueError('Invalid username, display name, or lifetime (1–168 hours)')
-    token = secrets.token_urlsafe(32)
+def issue_recovery(factory,username,directory):
+    # Only the local operator holding database access can use this utility.
     with factory.begin() as db:
-        if db.scalar(select(Account).where(Account.username == username)):
-            raise ValueError('Username already reserved; invitations do not overwrite accounts')
-        account = Account(username=username, display_name=display_name.strip())
-        db.add(account)
-        db.flush()
-        db.add(Invitation(digest=digest(token), account_id=account.id, expires_at=now() + hours * 3600))
-    return token
+        account=db.scalar(select(Account).where(Account.username==username.lower(),Account.active.is_(True)).with_for_update())
+        if not account:raise ValueError('No active account with that username')
+        code=secrets.token_urlsafe(32)
+        record=db.get(RecoveryCode,account.id)
+        if not record:record=RecoveryCode(account_id=account.id);db.add(record)
+        record.digest,record.used,record.created_at=digest(code),False,now()
+        db.execute(update(Challenge).where(Challenge.account_id==account.id,Challenge.operation=='recover').values(consumed=True))
+        directory.mkdir(mode=0o700,parents=True,exist_ok=True)
+        target=directory/(account.username+'-recovery-'+secrets.token_hex(4)+'.txt')
+        fd=os.open(target,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+        with os.fdopen(fd,'w') as stream:stream.write(code+'\n')
+    return target
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__)
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('username')
-    parser.add_argument('display_name')
-    parser.add_argument('--hours', type=int, default=24)
-    args = parser.parse_args()
-    engine, factory = connect(Settings.from_env().database_url)
-    try:
-        print(issue_invitation(factory, args.username, args.display_name, args.hours))
-    finally:
-        engine.dispose()
+    args=parser.parse_args()
+    engine,factory=connect(Settings.from_env().database_url)
+    try:print('Private recovery code saved to '+str(issue_recovery(factory,args.username,Path(__file__).resolve().parents[2]/'data')))
+    finally:engine.dispose()

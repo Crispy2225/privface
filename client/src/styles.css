@@ -173,4 +173,18 @@ h2:focus { outline: none; }
 .account-access { border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 18px 0; }
 .account-access h3 { margin-top: 0; }
 .account-access button { margin: 6px 0; }
-.account-access input { width: 100%; }
+.account-access input:not([type="checkbox"]) { width: 100%; }
+
+/* Study and account controls share the existing form palette and spacing. */
+.study-panel { max-width: 780px; margin: 2rem auto; width: calc(100% - 24px); }
+.study-panel h1 { font-size: clamp(2rem, 5vw, 3.1rem); letter-spacing: -1.2px; line-height: 1.15; }
+.study-panel p { line-height: 1.55; }
+.study-panel label.field, .account-access label.field { display: block; font-size: 14px; }
+.study-panel .field input, .study-panel .field select, .account-access .field input { display: block; margin-top: 8px; }
+.study-panel .field select { width: 100%; padding: 12px; border: 1px solid var(--input-border); border-radius: 10px; background: var(--surface); color: var(--text); font: inherit; }
+.study-panel > .secondary-button { display: block; width: 100%; margin: 14px 0; font-size: 13px; white-space: normal; }
+.study-panel > .text-button { display: block; margin: 16px 0; }
+.account-access details { margin-top: 18px; }
+.account-access summary { cursor: pointer; line-height: 1.5; }
+.account-access details .secondary-button { display: block; width: 100%; white-space: normal; }
+.account-access .consent input { width: auto; }

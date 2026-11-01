@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
+import { api, authorizeBinding } from './account-api'
+import type { AccountSession } from './account-api'
+import { prepareProofBinding, proofConfig } from './proof-client'
+import { prepareBinding } from './template-binding'
 import { generateEmbedding } from './face-embedding'
 import { encryptTemplate } from './template-crypto'
 import { deleteEnrollment, hasEnrollment, saveEnrollment } from './enrollment-store'
@@ -34,12 +38,23 @@ export default function LocalEnrollment({ photo, username, displayName, clearPho
     setMessage('Generating your face template on this device…')
     let embedding: number[] | null = null
     try {
+      const session=await api<AccountSession>('/session',undefined,undefined,controller.signal)
+      if(session.account.username!==username.toLowerCase())throw new Error('Sign in to the matching account first.')
       embedding = await generateEmbedding(photo, controller.signal)
       const encrypted = await encryptTemplate(username, displayName.trim(), embedding)
       controller.signal.throwIfAborted()
       await saveEnrollment(encrypted, controller.signal)
       setSaved(true)
-      setMessage('Local enrollment saved for @' + username.toLowerCase() + '. No server account has been created.')
+      setMessage('Saved locally. Linking your face enrollment to your account…')
+      try {
+        const config=await proofConfig(controller.signal)
+        const binding=await (config.enabled?prepareProofBinding:prepareBinding)(session.account.id,encrypted,controller.signal)
+        await authorizeBinding(binding,session.csrf,controller.signal)
+        setMessage('Face setup complete for @'+session.account.username+'. Your encrypted template stays on this browser.')
+        window.dispatchEvent(new Event('privface-session'))
+      } catch(error) {
+        setMessage('Your face was saved locally, but linking failed. Use Account security → Link or refresh saved face enrollment to retry. '+(error instanceof Error?error.message:''))
+      }
       clearPhoto()
     } catch (error) {
       if (!controller.signal.aborted) setMessage(error instanceof Error ? error.message : 'Enrollment failed. Retake your photo and try again.')
@@ -58,9 +73,9 @@ export default function LocalEnrollment({ photo, username, displayName, clearPho
 
   return <section className="local-enrollment" aria-label="Local face enrollment">
     {!saved && <label className="consent"><input type="checkbox" checked={consent} disabled={busy} onChange={event => setConsent(event.target.checked)} /><span>Save my face template in this browser for this username. It remains until I delete it or clear site data.</span></label>}
-    <button className="primary-button" type="button" disabled={!photo || !consent || busy || saved} onClick={() => void register()}>{busy ? 'Preparing enrollment…' : saved ? 'Enrolled on this device' : 'Save local face enrollment'}</button>
+    <button className="primary-button" type="button" disabled={!photo || !consent || busy || saved} onClick={() => void register()}>{busy ? 'Preparing enrollment…' : saved ? 'Enrolled on this device' : 'Save face & finish registration'}</button>
     {message && <p className="camera-feedback" role="status">{message}</p>}
     {saved && <button className="text-button" disabled={busy} type="button" onClick={() => void remove()}>Delete local enrollment</button>}
-    <p className="camera-privacy">The photo is discarded after saving. The encrypted numerical template stays in this browser. Authorize a server binding using the passkey controls above.</p>
+    <p className="camera-privacy">The photo is discarded after saving. The encrypted numerical template stays in this browser. Saving automatically links the template commitment to your signed-in account.</p>
   </section>
 }

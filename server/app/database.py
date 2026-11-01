@@ -16,6 +16,7 @@ class Account(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=identifier)
     username: Mapped[str] = mapped_column(String(32), unique=True)
     display_name: Mapped[str] = mapped_column(String(80))
+    password_hash: Mapped[str | None] = mapped_column(String(256), nullable=True)
     active: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
@@ -42,6 +43,7 @@ class LoginSession(Base):
     csrf: Mapped[str] = mapped_column(String(64))
     expires_at: Mapped[int] = mapped_column(BigInteger)
     revoked: Mapped[bool] = mapped_column(Boolean, default=False)
+    proof_context: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
 
 class Challenge(Base):
@@ -60,13 +62,21 @@ class Challenge(Base):
 class Enrollment(Base):
     __tablename__ = 'enrollments'
     account_id: Mapped[str] = mapped_column(ForeignKey('accounts.id'), primary_key=True)
-    credential_id: Mapped[str] = mapped_column(ForeignKey('credentials.id'))
+    credential_id: Mapped[str | None] = mapped_column(ForeignKey('credentials.id'), nullable=True)
     commitment: Mapped[str] = mapped_column(String(64))
     model: Mapped[str] = mapped_column(String(128))
     quantization: Mapped[str] = mapped_column(String(64))
     scheme: Mapped[str] = mapped_column(String(64))
     version: Mapped[int] = mapped_column(Integer, default=1)
     updated_at: Mapped[int] = mapped_column(BigInteger)
+
+
+class RecoveryCode(Base):
+    __tablename__ = 'recovery_codes'
+    account_id: Mapped[str] = mapped_column(ForeignKey('accounts.id'), primary_key=True)
+    digest: Mapped[str] = mapped_column(String(64), unique=True)
+    used: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[int] = mapped_column(BigInteger)
 
 
 class RateBucket(Base):
