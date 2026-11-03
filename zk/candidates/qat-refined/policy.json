@@ -1,0 +1,8 @@
+{
+  "format": "privface-zkml-policy-v1",
+  "modelSHA256": "e26af1fb1b4f9ad0e9b46f95206ae706973ac41170505fc887ba19d354ad4ff4",
+  "limit": "74682",
+  "calibrated": false,
+  "researchDatasetCalibrated": true,
+  "purpose": "M2 QAT metric candidate; fresh validation pending"
+}

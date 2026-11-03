@@ -2,25 +2,25 @@
   "results": [
     {
       "operation": 1,
-      "provingMs": 1078.5999999977648,
-      "verificationMs": 35.100000001490116,
-      "proofBytes": 724
+      "provingMs": 1060.2999999970198,
+      "verificationMs": 36.400000005960464,
+      "proofBytes": 722
     },
     {
       "operation": 2,
-      "provingMs": 1031,
-      "verificationMs": 34,
-      "proofBytes": 722
+      "provingMs": 1047.7000000029802,
+      "verificationMs": 34.399999998509884,
+      "proofBytes": 725
     }
   ],
   "invalidEnrollmentRejected": true,
   "cancellation": true,
   "timeout": true,
   "incompatibleTemplateRejected": true,
-  "modelSHA256": "7ee1585489b5e1863049317840e6c2bc0d2866c389430cb5f8badd189db89ae6",
-  "setupId": "e2b9e62d94c649f8b343642e79b1692f35601037305b285ebda27b7d63f011a4",
+  "modelSHA256": "e26af1fb1b4f9ad0e9b46f95206ae706973ac41170505fc887ba19d354ad4ff4",
+  "setupId": "79e2577255984e391519709d7327f1b8f83d74ac446334a0a89e69303fc1fea2",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
-  "jsHeapSnapshotBytes": 3771475,
+  "jsHeapSnapshotBytes": 3741172,
   "memoryNote": "JS heap snapshot is not peak WASM/worker/browser memory; M7 memory profiling pending",
   "assetTamperingRejected": true,
   "visibleEnrollmentAndMatch": true,

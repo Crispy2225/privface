@@ -17,7 +17,9 @@
     "prebuild": "npm run prepare:vision && npm run prepare:study",
     "audit:quantization": "node scripts/audit-quantization.mjs",
     "evaluate:matching": "node --experimental-strip-types scripts/evaluate-matching.mjs",
-    "prepare:study": "node scripts/quantize-recognition.mjs public/vision/recognition-int8"
+    "prepare:study": "node scripts/quantize-recognition.mjs public/vision/recognition-int8",
+    "benchmark:zkml": "node tests/zkml-benchmark.mjs",
+    "test:face-camera": "node tests/m4-smoke.mjs"
   },
   "overrides": {
     "node-fetch": "2.7.0"

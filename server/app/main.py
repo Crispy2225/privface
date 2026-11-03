@@ -231,9 +231,10 @@ def create_app(settings: Settings | None = None):
         with app.state.db() as db:
             current, account = session(db, request)
             enrollment = db.get(Enrollment, account.id)
+            authentication = 'face-proof-demo' if (current.proof_context or {}).get('authentication') == 'face-proof-demo' else 'password'
             context = current.proof_context
             if context and (not enrollment or not app.state.proofs or context.get('commitment') != enrollment.commitment or context.get('version') != enrollment.version or context.get('setup_id') != app.state.proofs.setup_id or context.get('limit') != app.state.proofs.policy()['limit']): context = None
-            return {'account': {'id': account.id, 'username': account.username, 'display_name': account.display_name}, 'csrf': current.csrf, 'authentication': 'password', 'descriptor_proof': context, 'enrollment': {'commitment': enrollment.commitment, 'version': enrollment.version, 'model': enrollment.model, 'quantization': enrollment.quantization, 'scheme': enrollment.scheme} if enrollment else None}
+            return {'account': {'id': account.id, 'username': account.username, 'display_name': account.display_name}, 'csrf': current.csrf, 'authentication': authentication, 'descriptor_proof': context, 'enrollment': {'commitment': enrollment.commitment, 'version': enrollment.version, 'model': enrollment.model, 'quantization': enrollment.quantization, 'scheme': enrollment.scheme} if enrollment else None}
 
     @app.post('/api/logout')
     def logout(request: Request, response: Response):
@@ -390,6 +391,8 @@ def create_app(settings: Settings | None = None):
             current.proof_context={**ch.payload,'verified_at':now(),'circuit':CIRCUIT}
             return {'verified':True,'scope':'private-descriptor-comparison','authentication':'password','verified_at':now()}
 
+    from .face_login import install
+    install(app,session,lock_account,new_challenge,consume,issue_session,limit,reject,now)
     return app
 
 app = create_app()

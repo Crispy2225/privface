@@ -1,0 +1,94 @@
+{
+  "scope": "Integer direction-matching diagnostic, not an implemented proof relation",
+  "search": [
+    {
+      "model": "fisher",
+      "trainingCVGenuineAcceptance": 0.5944444444444444,
+      "folds": [
+        {
+          "threshold": 688026,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 165,
+          "genuineAcceptance": 0.3888888888888889
+        },
+        {
+          "threshold": 535695,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 139,
+          "genuineAcceptance": 0.48518518518518516
+        },
+        {
+          "threshold": 477845,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 77,
+          "genuineAcceptance": 0.7148148148148148
+        },
+        {
+          "threshold": 432587,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 57,
+          "genuineAcceptance": 0.7888888888888889
+        }
+      ]
+    },
+    {
+      "model": "qat",
+      "trainingCVGenuineAcceptance": 0.6,
+      "folds": [
+        {
+          "threshold": 745847,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 166,
+          "genuineAcceptance": 0.3851851851851852
+        },
+        {
+          "threshold": 533931,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 138,
+          "genuineAcceptance": 0.4888888888888889
+        },
+        {
+          "threshold": 512114,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 77,
+          "genuineAcceptance": 0.7148148148148148
+        },
+        {
+          "threshold": 432337,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 51,
+          "genuineAcceptance": 0.8111111111111111
+        }
+      ]
+    }
+  ],
+  "selected": "qat",
+  "calibration": {
+    "threshold": 651982,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 194,
+    "genuineAcceptance": 0.46111111111111114
+  },
+  "heldOutTestUsed": false,
+  "scale": 1000000,
+  "rule": "dot > 0 AND SCALE * dot^2 >= threshold * normA_squared * normB_squared",
+  "accepted": false
+}

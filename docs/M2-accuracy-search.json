@@ -1,0 +1,832 @@
+{
+  "scope": "Training-only hyperparameter selection; calibration result is not independent test accuracy",
+  "datasetSHA256": "b612fb967f2dc77c9c62d3e1266e0c73d5fca46a4b8906c18e454d41af987794",
+  "trainingSubjects": [
+    9,
+    19,
+    8,
+    32,
+    14,
+    0,
+    31,
+    34,
+    2,
+    13,
+    30,
+    15,
+    23,
+    18,
+    33,
+    29,
+    37,
+    6,
+    36,
+    24,
+    5,
+    20,
+    16,
+    1
+  ],
+  "calibrationSubjects": [
+    38,
+    27,
+    21,
+    17,
+    28,
+    11,
+    22,
+    12
+  ],
+  "heldOutTestUsed": false,
+  "selectionRule": "Maximum mean four-fold subject-disjoint training-validation genuine acceptance at empirical FMR cap 0.0001; ties use fixed grid order",
+  "search": [
+    {
+      "pca": 32,
+      "shrink": 0.001,
+      "trainingCVGenuineAcceptance": 0.5407407407407407,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 57483.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 158,
+            "FAR": 0.0,
+            "FRR": 0.5851851851851851
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 66056.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 150,
+            "FAR": 0.0,
+            "FRR": 0.5555555555555556
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 78756.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 90,
+            "FAR": 0.0,
+            "FRR": 0.3333333333333333
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 69948.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 98,
+            "FAR": 0.0,
+            "FRR": 0.362962962962963
+          }
+        }
+      ]
+    },
+    {
+      "pca": 32,
+      "shrink": 0.01,
+      "trainingCVGenuineAcceptance": 0.5398148148148147,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 56976.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 159,
+            "FAR": 0.0,
+            "FRR": 0.5888888888888889
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 67446.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 150,
+            "FAR": 0.0,
+            "FRR": 0.5555555555555556
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 79888.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 90,
+            "FAR": 0.0,
+            "FRR": 0.3333333333333333
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 70632.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 98,
+            "FAR": 0.0,
+            "FRR": 0.362962962962963
+          }
+        }
+      ]
+    },
+    {
+      "pca": 32,
+      "shrink": 0.1,
+      "trainingCVGenuineAcceptance": 0.5277777777777777,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 55179.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 172,
+            "FAR": 0.0,
+            "FRR": 0.6370370370370371
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 76017.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 146,
+            "FAR": 0.0,
+            "FRR": 0.5407407407407407
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 95344.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 89,
+            "FAR": 0.0,
+            "FRR": 0.3296296296296296
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 72892.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 103,
+            "FAR": 0.0,
+            "FRR": 0.3814814814814815
+          }
+        }
+      ]
+    },
+    {
+      "pca": 64,
+      "shrink": 0.001,
+      "trainingCVGenuineAcceptance": 0.4564814814814815,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 47270.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 182,
+            "FAR": 0.0,
+            "FRR": 0.674074074074074
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 43826.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 189,
+            "FAR": 0.0,
+            "FRR": 0.7
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 74061.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 87,
+            "FAR": 0.0,
+            "FRR": 0.32222222222222224
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 48464.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 129,
+            "FAR": 0.0,
+            "FRR": 0.4777777777777778
+          }
+        }
+      ]
+    },
+    {
+      "pca": 64,
+      "shrink": 0.01,
+      "trainingCVGenuineAcceptance": 0.4648148148148148,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 47012.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 183,
+            "FAR": 0.0,
+            "FRR": 0.6777777777777778
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 48588.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 176,
+            "FAR": 0.0,
+            "FRR": 0.6518518518518519
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 72700.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 92,
+            "FAR": 0.0,
+            "FRR": 0.34074074074074073
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 49443.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 127,
+            "FAR": 0.0,
+            "FRR": 0.4703703703703704
+          }
+        }
+      ]
+    },
+    {
+      "pca": 64,
+      "shrink": 0.1,
+      "trainingCVGenuineAcceptance": 0.48796296296296293,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 45396.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 196,
+            "FAR": 0.0,
+            "FRR": 0.725925925925926
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 73801.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 140,
+            "FAR": 0.0,
+            "FRR": 0.5185185185185185
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 64116.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 113,
+            "FAR": 0.0,
+            "FRR": 0.4185185185185185
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 59903.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 104,
+            "FAR": 0.0,
+            "FRR": 0.3851851851851852
+          }
+        }
+      ]
+    },
+    {
+      "pca": 128,
+      "shrink": 0.001,
+      "trainingCVGenuineAcceptance": 0.48240740740740745,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 48135.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 162,
+            "FAR": 0.0,
+            "FRR": 0.6
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 47778.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 187,
+            "FAR": 0.0,
+            "FRR": 0.6925925925925925
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 82746.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 82,
+            "FAR": 0.0,
+            "FRR": 0.3037037037037037
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 46056.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 128,
+            "FAR": 0.0,
+            "FRR": 0.4740740740740741
+          }
+        }
+      ]
+    },
+    {
+      "pca": 128,
+      "shrink": 0.01,
+      "trainingCVGenuineAcceptance": 0.5490740740740742,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 57461.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 140,
+            "FAR": 0.0,
+            "FRR": 0.5185185185185185
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 55961.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 171,
+            "FAR": 0.0,
+            "FRR": 0.6333333333333333
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 96546.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 76,
+            "FAR": 0.0,
+            "FRR": 0.2814814814814815
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 55429.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 100,
+            "FAR": 0.0,
+            "FRR": 0.37037037037037035
+          }
+        }
+      ]
+    },
+    {
+      "pca": 128,
+      "shrink": 0.1,
+      "trainingCVGenuineAcceptance": 0.5620370370370371,
+      "folds": [
+        {
+          "validationSubjects": [
+            9,
+            19,
+            8,
+            32,
+            14,
+            0
+          ],
+          "metrics": {
+            "limit": 48608.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 169,
+            "FAR": 0.0,
+            "FRR": 0.6259259259259259
+          }
+        },
+        {
+          "validationSubjects": [
+            31,
+            34,
+            2,
+            13,
+            30,
+            15
+          ],
+          "metrics": {
+            "limit": 66490.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 144,
+            "FAR": 0.0,
+            "FRR": 0.5333333333333333
+          }
+        },
+        {
+          "validationSubjects": [
+            23,
+            18,
+            33,
+            29,
+            37,
+            6
+          ],
+          "metrics": {
+            "limit": 76830.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 92,
+            "FAR": 0.0,
+            "FRR": 0.34074074074074073
+          }
+        },
+        {
+          "validationSubjects": [
+            36,
+            24,
+            5,
+            20,
+            16,
+            1
+          ],
+          "metrics": {
+            "limit": 70989.0,
+            "genuinePairs": 270,
+            "impostorPairs": 1500,
+            "falseAccepts": 0,
+            "falseRejects": 68,
+            "FAR": 0.0,
+            "FRR": 0.2518518518518518
+          }
+        }
+      ]
+    }
+  ],
+  "selected": {
+    "pca": 128,
+    "shrink": 0.1,
+    "trainingCVGenuineAcceptance": 0.5620370370370371
+  },
+  "modelSHA256": "5f4523673f8e4a6fab9f105d4d7d3ed921affdf8d0a6fb3dbf2870ead68981d5",
+  "modelJSONBytes": 93869,
+  "integerCalibrationStrict": {
+    "limit": 58118.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 145,
+    "FAR": 0.0,
+    "FRR": 0.4027777777777778
+  },
+  "integerCalibrationResearch": {
+    "limit": 88739.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 28,
+    "falseRejects": 53,
+    "FAR": 0.01,
+    "FRR": 0.14722222222222223
+  },
+  "floatCalibrationStrict": {
+    "limit": 58446.43062211346,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 142,
+    "FAR": 0.0,
+    "FRR": 0.39444444444444443
+  },
+  "quantization": {
+    "rmse": 0.012292109153953094,
+    "maxEmbeddingError": 0.05136539189466727,
+    "maxAccumulatorBound": 2282496
+  },
+  "oracleCases": 320,
+  "accepted": false
+}

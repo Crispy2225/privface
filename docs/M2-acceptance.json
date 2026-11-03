@@ -1,0 +1,88 @@
+{
+  "format": "privface-m2-review-v1",
+  "modelSHA256": "e26af1fb1b4f9ad0e9b46f95206ae706973ac41170505fc887ba19d354ad4ff4",
+  "complete": false,
+  "checks": [
+    {
+      "name": "experiment model identity",
+      "passed": true,
+      "detail": "Evidence must reference exact exported model bytes"
+    },
+    {
+      "name": "proof model identity",
+      "passed": true,
+      "detail": "Evidence must reference exact exported model bytes"
+    },
+    {
+      "name": "browser model identity",
+      "passed": true,
+      "detail": "Evidence must reference exact exported model bytes"
+    },
+    {
+      "name": "benchmark model identity",
+      "passed": true,
+      "detail": "Evidence must reference exact exported model bytes"
+    },
+    {
+      "name": "consistent proof setup",
+      "passed": true,
+      "detail": "Proof, smoke test and benchmark must use the same setup"
+    },
+    {
+      "name": "proof correctness",
+      "passed": true,
+      "detail": "Enrollment, matching and corrupted-witness rejection required"
+    },
+    {
+      "name": "browser behavior",
+      "passed": true,
+      "detail": "Browser negative, cancellation and lifecycle tests required"
+    },
+    {
+      "name": "recognition FMR",
+      "passed": false,
+      "detail": "Fixed-threshold independent test FMR <= 0.01%"
+    },
+    {
+      "name": "recognition FNMR",
+      "passed": false,
+      "detail": "Fixed-threshold independent test FNMR < 5%"
+    },
+    {
+      "name": "freshHeldOut",
+      "passed": false,
+      "detail": "New identities unused in model/threshold selection"
+    },
+    {
+      "name": "representativeCapture",
+      "passed": false,
+      "detail": "Target-camera capture and population protocol reviewed"
+    },
+    {
+      "name": "demographicCoverage",
+      "passed": false,
+      "detail": "Per-group accuracy reviewed"
+    },
+    {
+      "name": "statisticalEvidenceReviewed",
+      "passed": false,
+      "detail": "Independent trials and uncertainty reviewed; correlated pair count is insufficient"
+    },
+    {
+      "name": "proof time",
+      "passed": true,
+      "detail": "At least 20 proofs; recomputed p95 <= 5000 ms"
+    },
+    {
+      "name": "sampled browser memory",
+      "passed": true,
+      "detail": "Sampled whole-browser process-tree RSS <= 2 GiB (16 GiB M5 Air / Chrome desktop target); short peaks may be missed"
+    },
+    {
+      "name": "target device declared",
+      "passed": true,
+      "detail": "Results apply only to recorded hardware/browser; no phone claim"
+    }
+  ],
+  "note": "Automated evidence consistency and acceptance checks; not a security audit or NIST certification"
+}

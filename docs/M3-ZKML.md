@@ -1,3 +1,5 @@
+> Current demonstration setup: see [M3 refined demo](M3-REFINED-DEMO.md). Earlier model measurements below are historical. Biometric acceptance remains unmet.
+
 # M3 — Full integer neural-inference proofs
 
 Reviewed: 1 November 2026.

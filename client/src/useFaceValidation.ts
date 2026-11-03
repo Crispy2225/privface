@@ -4,6 +4,7 @@ import type { FaceLandmarker } from '@mediapipe/tasks-vision'
 import { INITIAL_VALIDATION, LivenessSession } from './liveness'
 import type { Validation } from './liveness'
 import { observationFromResult } from './face-observation'
+import { checkFaceQuality, faceBounds } from './face-quality'
 
 type CaptureHandle = { capture: () => string | null; restart: () => void }
 
@@ -22,6 +23,7 @@ export function useFaceValidation(video: RefObject<HTMLVideoElement | null>, act
     let loadingTimer = 0
     const session = new LivenessSession()
     const canvas = document.createElement('canvas')
+    const qualitySample = document.createElement('canvas')
     const context = canvas.getContext('2d', { willReadFrequently: true })
     setValidation(INITIAL_VALIDATION)
 
@@ -35,13 +37,16 @@ export function useFaceValidation(video: RefObject<HTMLVideoElement | null>, act
       const element = video.current
       if (!detector || !element || !context || !element.srcObject || element.readyState < 2 || !element.videoWidth) return null
       // The detector and capture use this exact canvas frame; no unvalidated photo upload path.
-      const scale = Math.min(1, 640 / element.videoWidth)
+      const scale = Math.min(1, 960 / Math.max(element.videoWidth, element.videoHeight))
       canvas.width = Math.round(element.videoWidth * scale)
       canvas.height = Math.round(element.videoHeight * scale)
       context.drawImage(element, 0, 0, canvas.width, canvas.height)
       const now = performance.now()
       lastModelTimestamp = Math.max(now, lastModelTimestamp + 0.01)
-      const observation = observationFromResult(detector.detectForVideo(canvas, lastModelTimestamp))
+      const detected = detector.detectForVideo(canvas, lastModelTimestamp)
+      const observation = observationFromResult(detected, canvas.width, canvas.height)
+      const bounds = detected.faceLandmarks.length === 1 ? faceBounds(detected.faceLandmarks[0]) : null
+      if (bounds && !observation.issue) observation.issue = checkFaceQuality(canvas, bounds, qualitySample)
       const result = session.observe(observation, now)
       publish(result)
       return result
@@ -96,6 +101,7 @@ export function useFaceValidation(video: RefObject<HTMLVideoElement | null>, act
       window.clearTimeout(loadingTimer)
       detector?.close()
       canvas.width = canvas.height = 0
+      qualitySample.width = qualitySample.height = 0
     }
   }, [active, video])
 

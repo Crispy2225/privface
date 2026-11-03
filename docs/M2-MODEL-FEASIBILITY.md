@@ -1,6 +1,10 @@
+> Current demonstration setup: see [M3 refined demo](M3-REFINED-DEMO.md). Earlier model measurements below are historical. Biometric acceptance remains unmet.
+
 # M2 — Quantized model and proving feasibility
 
 Reviewed: 1 November 2026. Baseline: `5cdf6c8` plus the existing M1 documentation.
+
+See [2 November verification and candidate development](M2-VERIFICATION.md) for current acceptance targets, new candidate evidence, and measured whole-browser memory. M2 remains open.
 
 ## Status and completion boundary
 

@@ -1,0 +1,151 @@
+{
+  "scope": "calibration-only diagnostic; these are linear statistical baselines, not new zkML models",
+  "trainingSubjects": [
+    9,
+    19,
+    8,
+    32,
+    14,
+    0,
+    31,
+    34,
+    2,
+    13,
+    30,
+    15,
+    23,
+    18,
+    33,
+    29,
+    37,
+    6,
+    36,
+    24,
+    5,
+    20,
+    16,
+    1
+  ],
+  "calibrationSubjects": [
+    38,
+    27,
+    21,
+    17,
+    28,
+    11,
+    22,
+    12
+  ],
+  "heldOutTestUsed": false,
+  "candidates": [
+    {
+      "candidate": "PCA 16",
+      "calibration": {
+        "limit": 11.497962819062113,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 28,
+        "falseRejects": 259,
+        "FAR": 0.01,
+        "FRR": 0.7194444444444444
+      }
+    },
+    {
+      "candidate": "PCA 32",
+      "calibration": {
+        "limit": 17.25558107412678,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 28,
+        "falseRejects": 248,
+        "FAR": 0.01,
+        "FRR": 0.6888888888888889
+      }
+    },
+    {
+      "candidate": "PCA 64",
+      "calibration": {
+        "limit": 24.012574572452756,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 28,
+        "falseRejects": 229,
+        "FAR": 0.01,
+        "FRR": 0.6361111111111111
+      }
+    },
+    {
+      "candidate": "PCA64/Fisher16/shrink0.1",
+      "calibration": {
+        "limit": 54.36269351985482,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 28,
+        "falseRejects": 82,
+        "FAR": 0.01,
+        "FRR": 0.22777777777777777
+      }
+    },
+    {
+      "candidate": "PCA64/Fisher23/shrink0.1",
+      "calibration": {
+        "limit": 69.48934398443052,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 25,
+        "falseRejects": 87,
+        "FAR": 0.008928571428571428,
+        "FRR": 0.24166666666666667
+      }
+    },
+    {
+      "candidate": "PCA64/Fisher16/shrink0.5",
+      "calibration": {
+        "limit": 24.192144233507307,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 28,
+        "falseRejects": 147,
+        "FAR": 0.01,
+        "FRR": 0.4083333333333333
+      }
+    },
+    {
+      "candidate": "PCA64/Fisher23/shrink0.5",
+      "calibration": {
+        "limit": 32.120102863024165,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 27,
+        "falseRejects": 139,
+        "FAR": 0.009642857142857142,
+        "FRR": 0.3861111111111111
+      }
+    },
+    {
+      "candidate": "PCA64/Fisher16/shrink0.9",
+      "calibration": {
+        "limit": 22.537325042028385,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 28,
+        "falseRejects": 202,
+        "FAR": 0.01,
+        "FRR": 0.5611111111111111
+      }
+    },
+    {
+      "candidate": "PCA64/Fisher23/shrink0.9",
+      "calibration": {
+        "limit": 29.141300644079983,
+        "genuinePairs": 360,
+        "impostorPairs": 2800,
+        "falseAccepts": 28,
+        "falseRejects": 192,
+        "FAR": 0.01,
+        "FRR": 0.5333333333333333
+      }
+    }
+  ],
+  "decision": "Do not replace the deployed research model from these results alone. A selected neural candidate still needs quantization, proof setup, and fresh held-out evaluation."
+}

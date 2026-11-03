@@ -1,8 +1,8 @@
 {
   "format": "privface-zkml-policy-v1",
-  "modelSHA256": "7ee1585489b5e1863049317840e6c2bc0d2866c389430cb5f8badd189db89ae6",
-  "limit": "8326",
+  "modelSHA256": "e26af1fb1b4f9ad0e9b46f95206ae706973ac41170505fc887ba19d354ad4ff4",
+  "limit": "74682",
   "calibrated": false,
   "researchDatasetCalibrated": true,
-  "purpose": "M2/M3 research demonstration; M5 webcam calibration pending"
+  "purpose": "M2 QAT metric candidate; fresh validation pending"
 }

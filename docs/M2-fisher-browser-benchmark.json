@@ -1,0 +1,139 @@
+{
+  "modelSHA256": "9f3f459069da434930f1a6b6be1b43bb7153a67d2ab0cae02d88ff15218154f1",
+  "setupId": "af3c43cff072e119fc5e4ca907e2e0f20bfcd541b68377ca26597ae5c6d2d6fc",
+  "timings": [
+    {
+      "provingMs": 1057,
+      "verificationMs": 35.899999998509884,
+      "endToEndMs": 1145.5
+    },
+    {
+      "provingMs": 1051.9000000059605,
+      "verificationMs": 35.099999994039536,
+      "endToEndMs": 1135.3999999985099
+    },
+    {
+      "provingMs": 1050.5,
+      "verificationMs": 34.70000000298023,
+      "endToEndMs": 1132.7000000029802
+    },
+    {
+      "provingMs": 1053.2000000029802,
+      "verificationMs": 34.399999998509884,
+      "endToEndMs": 1135.5
+    },
+    {
+      "provingMs": 1055.1000000014901,
+      "verificationMs": 35,
+      "endToEndMs": 1137.7999999970198
+    },
+    {
+      "provingMs": 1052.8999999985099,
+      "verificationMs": 36.70000000298023,
+      "endToEndMs": 1136.2000000029802
+    },
+    {
+      "provingMs": 1049.7000000029802,
+      "verificationMs": 34.79999999701977,
+      "endToEndMs": 1132.3999999985099
+    },
+    {
+      "provingMs": 1055.3999999985099,
+      "verificationMs": 35.400000005960464,
+      "endToEndMs": 1138.7999999970198
+    },
+    {
+      "provingMs": 1052.1999999955297,
+      "verificationMs": 34.30000000447035,
+      "endToEndMs": 1137.7999999970198
+    },
+    {
+      "provingMs": 1051.8999999985099,
+      "verificationMs": 34.100000001490116,
+      "endToEndMs": 1134.5
+    },
+    {
+      "provingMs": 1050.1000000014901,
+      "verificationMs": 34.600000001490116,
+      "endToEndMs": 1133.5
+    },
+    {
+      "provingMs": 1068.5999999940395,
+      "verificationMs": 43.600000001490116,
+      "endToEndMs": 1158.6000000014901
+    },
+    {
+      "provingMs": 1050.7000000029802,
+      "verificationMs": 34.79999999701977,
+      "endToEndMs": 1132.7999999970198
+    },
+    {
+      "provingMs": 1051,
+      "verificationMs": 34.899999998509884,
+      "endToEndMs": 1132.1000000014901
+    },
+    {
+      "provingMs": 1047.5,
+      "verificationMs": 34.29999999701977,
+      "endToEndMs": 1127.8999999985099
+    },
+    {
+      "provingMs": 1050.8000000044703,
+      "verificationMs": 35,
+      "endToEndMs": 1134.2999999970198
+    },
+    {
+      "provingMs": 1050.8999999985099,
+      "verificationMs": 34.69999999552965,
+      "endToEndMs": 1133
+    },
+    {
+      "provingMs": 1049.6999999955297,
+      "verificationMs": 35.400000005960464,
+      "endToEndMs": 1133.3999999985099
+    },
+    {
+      "provingMs": 1050.6000000014901,
+      "verificationMs": 35.5,
+      "endToEndMs": 1133.5
+    },
+    {
+      "provingMs": 1056.5,
+      "verificationMs": 36,
+      "endToEndMs": 1138.9000000059605
+    }
+  ],
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "scope": "Synthetic matching proofs, new worker per run; not recognition accuracy or physical-phone evidence",
+  "device": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpu": "Apple M5",
+    "logicalCPUs": 10,
+    "totalMemoryBytes": 17179869184
+  },
+  "runs": 20,
+  "p95ProvingMs": 1057,
+  "p95EndToEndMs": 1145.5,
+  "memory": {
+    "sampledPeakBrowserTreeRSSBytes": 1314521088,
+    "observations": 450,
+    "intervalMs": 50,
+    "scope": "Entire dedicated browser process tree including renderers and workers; shared pages may be double-counted; sampling may miss short peaks"
+  },
+  "provisionalBudget": {
+    "target": "16 GiB Apple M5 MacBook Air / Chrome desktop",
+    "p95ProvingMs": 5000,
+    "sampledPeakBrowserTreeRSSBytes": 2147483648
+  },
+  "withinProvisionalBudget": true,
+  "budgetRevision": {
+    "date": "2026-11-02",
+    "reason": "User selected 16 GiB Apple M5 MacBook Air running Chrome as target; reassessed existing measurements, not a new benchmark run",
+    "previousBudget": {
+      "p95ProvingMs": 5000,
+      "sampledPeakBrowserTreeRSSBytes": 536870912
+    },
+    "previousWithinBudget": false
+  }
+}

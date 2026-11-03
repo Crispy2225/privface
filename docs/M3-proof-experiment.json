@@ -1,10 +1,10 @@
 {
   "scope": "M2/M3 full small-MLP inference on synthetic image grids; not camera/accuracy evidence",
-  "node": "v24.22.1",
+  "node": "v24.19.0",
   "platform": "darwin",
   "architecture": "arm64",
-  "setupId": "e2b9e62d94c649f8b343642e79b1692f35601037305b285ebda27b7d63f011a4",
-  "modelSHA256": "7ee1585489b5e1863049317840e6c2bc0d2866c389430cb5f8badd189db89ae6",
+  "setupId": "79e2577255984e391519709d7327f1b8f83d74ac446334a0a89e69303fc1fea2",
+  "modelSHA256": "e26af1fb1b4f9ad0e9b46f95206ae706973ac41170505fc887ba19d354ad4ff4",
   "checks": [
     "Python/JS integer parity: black",
     "Python/JS integer parity: white",
@@ -48,26 +48,26 @@
   "timings": [
     {
       "label": "Full enrollment inference proof",
-      "provingMs": 1077.488042,
-      "verificationMs": 164.65424999999982,
-      "proofJSONBytes": 725
+      "provingMs": 1104.728834,
+      "verificationMs": 108.43075000000022,
+      "proofJSONBytes": 723
     },
     {
       "label": "Full login-relation inference proof with a different crop",
-      "provingMs": 1063.096791,
-      "verificationMs": 22.012374999999793,
-      "proofJSONBytes": 722
+      "provingMs": 1082.670666,
+      "verificationMs": 22.014875000000302,
+      "proofJSONBytes": 726
     }
   ],
-  "peakRSSBytes": 445906944,
+  "peakRSSBytes": 424853504,
   "assets": {
-    "model.json": 93677,
-    "policy.json": 282,
+    "model.json": 94124,
+    "policy.json": 273,
     "poseidon.json": 79099,
     "snarkjs.min.js": 688758,
-    "zkml.wasm": 4082068,
-    "zkml.zkey": 12135528,
-    "verification_key.json": 4389,
+    "zkml.wasm": 4071736,
+    "zkml.zkey": 12125848,
+    "verification_key.json": 4390,
     "runtime.mjs": 4189,
     "worker.js": 1557
   }

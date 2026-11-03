@@ -1,0 +1,97 @@
+{
+  "scope": "Calibration-only candidate, not fresh held-out or authentication suitability evidence",
+  "datasetSHA256": "b612fb967f2dc77c9c62d3e1266e0c73d5fca46a4b8906c18e454d41af987794",
+  "modelSHA256": "9f3f459069da434930f1a6b6be1b43bb7153a67d2ab0cae02d88ff15218154f1",
+  "modelJSONBytes": 91261,
+  "trainingSubjects": [
+    9,
+    19,
+    8,
+    32,
+    14,
+    0,
+    31,
+    34,
+    2,
+    13,
+    30,
+    15,
+    23,
+    18,
+    33,
+    29,
+    37,
+    6,
+    36,
+    24,
+    5,
+    20,
+    16,
+    1
+  ],
+  "calibrationSubjects": [
+    38,
+    27,
+    21,
+    17,
+    28,
+    11,
+    22,
+    12
+  ],
+  "heldOutTestUsed": false,
+  "selection": "PCA64/Fisher16/shrink0.1 fixed from prior calibration diagnostics",
+  "architecture": "Signed ReLU realization of linear Fisher projection; no nonlinear fine-tuning",
+  "integerCalibrationResearch": {
+    "limit": 84307.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 28,
+    "falseRejects": 83,
+    "FAR": 0.01,
+    "FRR": 0.23055555555555557
+  },
+  "integerCalibrationStrict": {
+    "limit": 60666.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 151,
+    "FAR": 0.0,
+    "FRR": 0.41944444444444445
+  },
+  "floatCalibrationResearch": {
+    "limit": 84936.55449092624,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 28,
+    "falseRejects": 82,
+    "FAR": 0.01,
+    "FRR": 0.22777777777777777
+  },
+  "floatCalibrationStrict": {
+    "limit": 61430.42504601918,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 149,
+    "FAR": 0.0,
+    "FRR": 0.41388888888888886
+  },
+  "quantization": {
+    "rmse": 0.011399638018321048,
+    "maxEmbeddingError": 0.03995093002788841,
+    "maxAccumulatorBound": 1988608
+  },
+  "oracleCases": 320,
+  "numpy": "2.0.2",
+  "acceptance": {
+    "accepted": false,
+    "reasons": [
+      "No fresh independent evaluation",
+      "No demographic or camera evaluation",
+      "Calibration pairs are correlated and insufficient to establish FMR <= 0.0001",
+      "Candidate requires separate proof setup and device benchmark"
+    ]
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "scope": "Training-only model/epoch selection; calibration is not fresh held-out test accuracy",
+  "modelSHA256": "a42e255666c1ed65d965bb22e265bba7165a9e30e91daedfacbdb364ab2a0ecb",
+  "modelJSONBytes": 93864,
+  "datasetSHA256": "b612fb967f2dc77c9c62d3e1266e0c73d5fca46a4b8906c18e454d41af987794",
+  "trainingSubjects": [
+    9,
+    19,
+    8,
+    32,
+    14,
+    0,
+    31,
+    34,
+    2,
+    13,
+    30,
+    15,
+    23,
+    18,
+    33,
+    29,
+    37,
+    6,
+    36,
+    24,
+    5,
+    20,
+    16,
+    1
+  ],
+  "calibrationSubjects": [
+    38,
+    27,
+    21,
+    17,
+    28,
+    11,
+    22,
+    12
+  ],
+  "heldOutTestUsed": false,
+  "seed": 20261102,
+  "torch": "2.9.1",
+  "search": [
+    {
+      "loss": "triplet",
+      "learningRate": 0.0001,
+      "steps": 100,
+      "trainingCVGenuineAcceptance": 0.28703703703703703,
+      "folds": [
+        {
+          "limit": 21407.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 200,
+          "FAR": 0.0,
+          "FRR": 0.7407407407407407
+        },
+        {
+          "limit": 18131.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 222,
+          "FAR": 0.0,
+          "FRR": 0.8222222222222222
+        },
+        {
+          "limit": 29190.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 145,
+          "FAR": 0.0,
+          "FRR": 0.5370370370370371
+        },
+        {
+          "limit": 12438.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 203,
+          "FAR": 0.0,
+          "FRR": 0.7518518518518519
+        }
+      ]
+    },
+    {
+      "loss": "triplet",
+      "learningRate": 0.0001,
+      "steps": 300,
+      "trainingCVGenuineAcceptance": 0.1851851851851852,
+      "folds": [
+        {
+          "limit": 27986.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 186,
+          "FAR": 0.0,
+          "FRR": 0.6888888888888889
+        },
+        {
+          "limit": 20116.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 230,
+          "FAR": 0.0,
+          "FRR": 0.8518518518518519
+        },
+        {
+          "limit": 19392.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 211,
+          "FAR": 0.0,
+          "FRR": 0.7814814814814814
+        },
+        {
+          "limit": 6797.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 253,
+          "FAR": 0.0,
+          "FRR": 0.937037037037037
+        }
+      ]
+    },
+    {
+      "loss": "triplet",
+      "learningRate": 0.0005,
+      "steps": 100,
+      "trainingCVGenuineAcceptance": 0.2175925925925926,
+      "folds": [
+        {
+          "limit": 25689.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 184,
+          "FAR": 0.0,
+          "FRR": 0.6814814814814815
+        },
+        {
+          "limit": 25784.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 208,
+          "FAR": 0.0,
+          "FRR": 0.7703703703703704
+        },
+        {
+          "limit": 19083.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 208,
+          "FAR": 0.0,
+          "FRR": 0.7703703703703704
+        },
+        {
+          "limit": 8274.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 245,
+          "FAR": 0.0,
+          "FRR": 0.9074074074074074
+        }
+      ]
+    },
+    {
+      "loss": "triplet",
+      "learningRate": 0.0005,
+      "steps": 300,
+      "trainingCVGenuineAcceptance": 0.19259259259259262,
+      "folds": [
+        {
+          "limit": 22889.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 204,
+          "FAR": 0.0,
+          "FRR": 0.7555555555555555
+        },
+        {
+          "limit": 21678.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 224,
+          "FAR": 0.0,
+          "FRR": 0.8296296296296296
+        },
+        {
+          "limit": 24691.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 184,
+          "FAR": 0.0,
+          "FRR": 0.6814814814814815
+        },
+        {
+          "limit": 4601.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 260,
+          "FAR": 0.0,
+          "FRR": 0.9629629629629629
+        }
+      ]
+    }
+  ],
+  "selected": {
+    "loss": "triplet",
+    "learningRate": 0.0001,
+    "steps": 100,
+    "trainingCVGenuineAcceptance": 0.28703703703703703
+  },
+  "integerCalibrationStrict": {
+    "limit": 16564.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 260,
+    "FAR": 0.0,
+    "FRR": 0.7222222222222222
+  },
+  "integerCalibrationResearch": {
+    "limit": 33935.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 28,
+    "falseRejects": 113,
+    "FAR": 0.01,
+    "FRR": 0.3138888888888889
+  },
+  "maxAccumulatorBound": 2417502,
+  "oracleCases": 320,
+  "accepted": false,
+  "method": "QAT pair-distance distillation from pretrained face-api teacher, weight 2",
+  "decision": "Rejected: worse than existing 70.56% candidate"
+}

@@ -1,0 +1,37 @@
+{
+  "scope": "Pretrained teacher on 32x32 grayscale development crops, not held-out accuracy",
+  "teacher": "local face-api.js ResNet recognition encoder",
+  "heldOutTestUsed": false,
+  "strict": {
+    "limit": 0.25296148771883653,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 12,
+    "FAR": 0.0,
+    "FRR": 0.03333333333333333
+  },
+  "research": {
+    "limit": 0.2860774617749594,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 17,
+    "falseRejects": 4,
+    "FAR": 0.006071428571428571,
+    "FRR": 0.011111111111111112
+  },
+  "teacherAssets": {
+    "face_recognition_model-shard2": "69350fdecd845c532e44dd8f7d0521c773505ef46b87cc34f46640a0cc334ecc",
+    "face_recognition_model-shard1": "412566a2b8d814d84c60b8055ec5d3b3b2328ef7cd7853384e03ec3db7b053d8",
+    "face_recognition_model-weights_manifest.json": "6619f4126f845c1f7857f39cbd79565f375734f46e0dd25d9602f8dc21cda9f5"
+  },
+  "licenseSources": [
+    "https://github.com/justadudewhohacks/face-api.js/blob/master/LICENSE",
+    "https://github.com/davisking/dlib-models"
+  ],
+  "limitations": [
+    "Repeatedly used calibration identities; not independent test accuracy",
+    "Unknown overlap with original pretrained training corpus",
+    "Teacher inference is floating point and has not been compiled into the proof circuit"
+  ]
+}

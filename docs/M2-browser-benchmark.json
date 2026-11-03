@@ -1,0 +1,130 @@
+{
+  "modelSHA256": "e26af1fb1b4f9ad0e9b46f95206ae706973ac41170505fc887ba19d354ad4ff4",
+  "setupId": "79e2577255984e391519709d7327f1b8f83d74ac446334a0a89e69303fc1fea2",
+  "timings": [
+    {
+      "provingMs": 1060.8999999985099,
+      "verificationMs": 35.399999998509884,
+      "endToEndMs": 1148.4000000059605
+    },
+    {
+      "provingMs": 1054.7000000029802,
+      "verificationMs": 36.100000001490116,
+      "endToEndMs": 1139.6000000014901
+    },
+    {
+      "provingMs": 1056,
+      "verificationMs": 34.20000000298023,
+      "endToEndMs": 1139.1000000014901
+    },
+    {
+      "provingMs": 1056.3999999985099,
+      "verificationMs": 35.600000001490116,
+      "endToEndMs": 1140.1999999955297
+    },
+    {
+      "provingMs": 1054.1999999955297,
+      "verificationMs": 35.100000001490116,
+      "endToEndMs": 1137.2000000029802
+    },
+    {
+      "provingMs": 1140.5999999940395,
+      "verificationMs": 34.900000005960464,
+      "endToEndMs": 1222.5
+    },
+    {
+      "provingMs": 1053.4000000059605,
+      "verificationMs": 34.29999999701977,
+      "endToEndMs": 1134.8999999985099
+    },
+    {
+      "provingMs": 1052.5,
+      "verificationMs": 34.70000000298023,
+      "endToEndMs": 1138.7999999970198
+    },
+    {
+      "provingMs": 1052.9000000059605,
+      "verificationMs": 34.899999998509884,
+      "endToEndMs": 1135.1000000014901
+    },
+    {
+      "provingMs": 1056.6000000014901,
+      "verificationMs": 36.69999999552965,
+      "endToEndMs": 1140
+    },
+    {
+      "provingMs": 1058,
+      "verificationMs": 36.399999998509884,
+      "endToEndMs": 1141.3999999985099
+    },
+    {
+      "provingMs": 1084.6999999955297,
+      "verificationMs": 35.20000000298023,
+      "endToEndMs": 1168
+    },
+    {
+      "provingMs": 1062.5,
+      "verificationMs": 35,
+      "endToEndMs": 1144.6000000014901
+    },
+    {
+      "provingMs": 1058.9000000059605,
+      "verificationMs": 34.899999998509884,
+      "endToEndMs": 1141.8999999985099
+    },
+    {
+      "provingMs": 1055.2000000029802,
+      "verificationMs": 34.69999999552965,
+      "endToEndMs": 1137.2000000029802
+    },
+    {
+      "provingMs": 1054.0999999940395,
+      "verificationMs": 35.100000001490116,
+      "endToEndMs": 1136.2000000029802
+    },
+    {
+      "provingMs": 1057,
+      "verificationMs": 34.69999999552965,
+      "endToEndMs": 1140
+    },
+    {
+      "provingMs": 1055.5,
+      "verificationMs": 34.900000005960464,
+      "endToEndMs": 1137.1999999955297
+    },
+    {
+      "provingMs": 1056.2000000029802,
+      "verificationMs": 35,
+      "endToEndMs": 1138.8999999985099
+    },
+    {
+      "provingMs": 1073.2000000029802,
+      "verificationMs": 35.600000001490116,
+      "endToEndMs": 1156.2000000029802
+    }
+  ],
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "scope": "Synthetic matching proofs, new worker per run; not recognition accuracy or physical-phone evidence",
+  "device": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpu": "Apple M5",
+    "logicalCPUs": 10,
+    "totalMemoryBytes": 17179869184
+  },
+  "runs": 20,
+  "p95ProvingMs": 1084.6999999955297,
+  "p95EndToEndMs": 1168,
+  "memory": {
+    "sampledPeakBrowserTreeRSSBytes": 1335918592,
+    "observations": 453,
+    "intervalMs": 50,
+    "scope": "Entire dedicated browser process tree including renderers and workers; shared pages may be double-counted; sampling may miss short peaks"
+  },
+  "provisionalBudget": {
+    "target": "16 GiB Apple M5 MacBook Air / Chrome desktop",
+    "p95ProvingMs": 5000,
+    "sampledPeakBrowserTreeRSSBytes": 2147483648
+  },
+  "withinProvisionalBudget": true
+}

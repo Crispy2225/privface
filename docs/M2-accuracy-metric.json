@@ -1,0 +1,426 @@
+{
+  "scope": "Training-only model/epoch selection; calibration is not fresh held-out test accuracy",
+  "modelSHA256": "c4d4d9f6895b9b4bdc2cfb3e02ed7f0639e22cf3d614ac8a564417802731b530",
+  "modelJSONBytes": 94141,
+  "datasetSHA256": "b612fb967f2dc77c9c62d3e1266e0c73d5fca46a4b8906c18e454d41af987794",
+  "trainingSubjects": [
+    9,
+    19,
+    8,
+    32,
+    14,
+    0,
+    31,
+    34,
+    2,
+    13,
+    30,
+    15,
+    23,
+    18,
+    33,
+    29,
+    37,
+    6,
+    36,
+    24,
+    5,
+    20,
+    16,
+    1
+  ],
+  "calibrationSubjects": [
+    38,
+    27,
+    21,
+    17,
+    28,
+    11,
+    22,
+    12
+  ],
+  "heldOutTestUsed": false,
+  "seed": 20261102,
+  "torch": "2.9.1",
+  "search": [
+    {
+      "loss": "contrastive",
+      "learningRate": 0.0001,
+      "steps": 100,
+      "trainingCVGenuineAcceptance": 0.5120370370370371,
+      "folds": [
+        {
+          "limit": 37314.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 190,
+          "FAR": 0.0,
+          "FRR": 0.7037037037037037
+        },
+        {
+          "limit": 53742.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 156,
+          "FAR": 0.0,
+          "FRR": 0.5777777777777777
+        },
+        {
+          "limit": 53427.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 103,
+          "FAR": 0.0,
+          "FRR": 0.3814814814814815
+        },
+        {
+          "limit": 52620.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 78,
+          "FAR": 0.0,
+          "FRR": 0.28888888888888886
+        }
+      ]
+    },
+    {
+      "loss": "contrastive",
+      "learningRate": 0.0001,
+      "steps": 300,
+      "trainingCVGenuineAcceptance": 0.4824074074074074,
+      "folds": [
+        {
+          "limit": 36116.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 195,
+          "FAR": 0.0,
+          "FRR": 0.7222222222222222
+        },
+        {
+          "limit": 49567.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 170,
+          "FAR": 0.0,
+          "FRR": 0.6296296296296297
+        },
+        {
+          "limit": 52548.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 106,
+          "FAR": 0.0,
+          "FRR": 0.3925925925925926
+        },
+        {
+          "limit": 47637.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 88,
+          "FAR": 0.0,
+          "FRR": 0.32592592592592595
+        }
+      ]
+    },
+    {
+      "loss": "contrastive",
+      "learningRate": 0.0005,
+      "steps": 100,
+      "trainingCVGenuineAcceptance": 0.46944444444444444,
+      "folds": [
+        {
+          "limit": 35710.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 196,
+          "FAR": 0.0,
+          "FRR": 0.725925925925926
+        },
+        {
+          "limit": 46089.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 175,
+          "FAR": 0.0,
+          "FRR": 0.6481481481481481
+        },
+        {
+          "limit": 56223.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 103,
+          "FAR": 0.0,
+          "FRR": 0.3814814814814815
+        },
+        {
+          "limit": 42861.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 99,
+          "FAR": 0.0,
+          "FRR": 0.36666666666666664
+        }
+      ]
+    },
+    {
+      "loss": "contrastive",
+      "learningRate": 0.0005,
+      "steps": 300,
+      "trainingCVGenuineAcceptance": 0.48518518518518516,
+      "folds": [
+        {
+          "limit": 43340.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 180,
+          "FAR": 0.0,
+          "FRR": 0.6666666666666666
+        },
+        {
+          "limit": 51066.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 174,
+          "FAR": 0.0,
+          "FRR": 0.6444444444444445
+        },
+        {
+          "limit": 66106.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 99,
+          "FAR": 0.0,
+          "FRR": 0.36666666666666664
+        },
+        {
+          "limit": 44698.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 103,
+          "FAR": 0.0,
+          "FRR": 0.3814814814814815
+        }
+      ]
+    },
+    {
+      "loss": "triplet",
+      "learningRate": 0.0001,
+      "steps": 100,
+      "trainingCVGenuineAcceptance": 0.5537037037037037,
+      "folds": [
+        {
+          "limit": 51436.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 162,
+          "FAR": 0.0,
+          "FRR": 0.6
+        },
+        {
+          "limit": 57327.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 150,
+          "FAR": 0.0,
+          "FRR": 0.5555555555555556
+        },
+        {
+          "limit": 59093.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 104,
+          "FAR": 0.0,
+          "FRR": 0.3851851851851852
+        },
+        {
+          "limit": 70074.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 66,
+          "FAR": 0.0,
+          "FRR": 0.24444444444444444
+        }
+      ]
+    },
+    {
+      "loss": "triplet",
+      "learningRate": 0.0001,
+      "steps": 300,
+      "trainingCVGenuineAcceptance": 0.537037037037037,
+      "folds": [
+        {
+          "limit": 45194.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 168,
+          "FAR": 0.0,
+          "FRR": 0.6222222222222222
+        },
+        {
+          "limit": 53514.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 161,
+          "FAR": 0.0,
+          "FRR": 0.5962962962962963
+        },
+        {
+          "limit": 61250.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 102,
+          "FAR": 0.0,
+          "FRR": 0.37777777777777777
+        },
+        {
+          "limit": 66863.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 69,
+          "FAR": 0.0,
+          "FRR": 0.25555555555555554
+        }
+      ]
+    },
+    {
+      "loss": "triplet",
+      "learningRate": 0.0005,
+      "steps": 100,
+      "trainingCVGenuineAcceptance": 0.537962962962963,
+      "folds": [
+        {
+          "limit": 45221.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 166,
+          "FAR": 0.0,
+          "FRR": 0.6148148148148148
+        },
+        {
+          "limit": 56747.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 158,
+          "FAR": 0.0,
+          "FRR": 0.5851851851851851
+        },
+        {
+          "limit": 60076.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 104,
+          "FAR": 0.0,
+          "FRR": 0.3851851851851852
+        },
+        {
+          "limit": 65316.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 71,
+          "FAR": 0.0,
+          "FRR": 0.26296296296296295
+        }
+      ]
+    },
+    {
+      "loss": "triplet",
+      "learningRate": 0.0005,
+      "steps": 300,
+      "trainingCVGenuineAcceptance": 0.5351851851851852,
+      "folds": [
+        {
+          "limit": 45983.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 165,
+          "FAR": 0.0,
+          "FRR": 0.6111111111111112
+        },
+        {
+          "limit": 58181.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 159,
+          "FAR": 0.0,
+          "FRR": 0.5888888888888889
+        },
+        {
+          "limit": 64065.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 103,
+          "FAR": 0.0,
+          "FRR": 0.3814814814814815
+        },
+        {
+          "limit": 59583.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 75,
+          "FAR": 0.0,
+          "FRR": 0.2777777777777778
+        }
+      ]
+    }
+  ],
+  "selected": {
+    "loss": "triplet",
+    "learningRate": 0.0001,
+    "steps": 100,
+    "trainingCVGenuineAcceptance": 0.5537037037037037
+  },
+  "integerCalibrationStrict": {
+    "limit": 83010.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 109,
+    "FAR": 0.0,
+    "FRR": 0.30277777777777776
+  },
+  "integerCalibrationResearch": {
+    "limit": 113473.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 24,
+    "falseRejects": 47,
+    "FAR": 0.008571428571428572,
+    "FRR": 0.13055555555555556
+  },
+  "maxAccumulatorBound": 2389208,
+  "oracleCases": 320,
+  "accepted": false
+}

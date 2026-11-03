@@ -1,0 +1,8 @@
+{
+  "format": "privface-zkml-policy-v1",
+  "modelSHA256": "9f3f459069da434930f1a6b6be1b43bb7153a67d2ab0cae02d88ff15218154f1",
+  "limit": "60666",
+  "calibrated": false,
+  "researchDatasetCalibrated": true,
+  "purpose": "Unaccepted M2 Fisher research candidate; strict calibration threshold, fresh validation pending"
+}

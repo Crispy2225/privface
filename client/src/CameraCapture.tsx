@@ -16,6 +16,7 @@ export default function CameraCapture({ enrollment, verificationUsername, studyC
   const mounted = useRef(false)
   const [status, setStatus] = useState<Status>('idle')
   const [ready, setReady] = useState(false)
+  const [aspectRatio, setAspectRatio] = useState('4 / 3')
   const [photo, setPhoto] = useState<string | null>(null)
   const [error, setError] = useState('')
   const { validation, captureValidatedPhoto, restartValidation } = useFaceValidation(video, status === 'live' && ready)
@@ -113,8 +114,8 @@ export default function CameraCapture({ enrollment, verificationUsername, studyC
   }
 
   return <div className="camera-capture">
-    <div className={`camera-view ${status}`}>
-      <video ref={video} autoPlay playsInline muted aria-label="Live camera preview" className={status === 'live' ? 'visible' : ''} onLoadedData={() => { if (video.current?.srcObject) setReady(true) }} />
+    <div className={`camera-view ${status}`} style={{ aspectRatio }}>
+      <video ref={video} autoPlay playsInline muted aria-label="Live camera preview" className={status === 'live' ? 'visible' : ''} onResize={() => { if (video.current?.videoWidth && video.current.videoHeight) setAspectRatio(`${video.current.videoWidth} / ${video.current.videoHeight}`) }} onLoadedData={() => { if (video.current?.srcObject) setReady(true) }} />
       {photo && <img className="captured-photo" src={photo} alt="Your captured photo, held only in this page’s memory" />}
       {status === 'live' && <><div className="face-guide" aria-hidden="true" /><span className="camera-live"><i />CAMERA ON</span><span className="frame-instruction">{validation.canCapture ? 'Ready to capture' : 'Follow the movement check below'}</span></>}
       {status === 'captured' && <span className="camera-live captured-label">PHOTO PREVIEW · CAMERA OFF</span>}

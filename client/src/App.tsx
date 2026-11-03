@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import CameraCapture from './CameraCapture'
 import StudyCollection from './StudyCollection'
-import ThemeToggle from './ThemeToggle'
+import SiteHeader from './SiteHeader'
 import AccountAccess from './AccountAccess'
 import { api, registerAccount, loginAccount } from './account-api'
 import type { AccountSession } from './account-api'
@@ -16,6 +16,7 @@ function FaceMark({ small = false }: { small?: boolean }) {
     <path d="M28 31v7m24-7v7M39 32v13h5m-16 8c7 6 17 6 24 0" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 }
+
 
 function LockIcon() {
   return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3" stroke="currentColor" strokeWidth="1.6" /><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
@@ -104,9 +105,9 @@ function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('login')
-  if(window.location.pathname==='/study') return <StudyCollection />
+  if(window.location.pathname==='/study') return <div className="page-shell"><SiteHeader /><StudyCollection /></div>
   return <div className="page-shell">
-    <header className="site-header"><a className="brand" href="/" aria-label="PrivFace home"><FaceMark small /><span>privface<span className="brand-period">.</span></span></a><nav aria-label="Main navigation"><a href="/study">Calibration study</a><a href="#how-it-works">How it works</a><span className="project-label"><LockIcon /> On-device privacy</span><ThemeToggle /></nav></header>
+    <SiteHeader />
     <main className="auth-layout">
       <section className="intro" aria-labelledby="intro-title">
         <span className="privacy-pill"><span />INTRODUCING PRIVFACE</span>

@@ -1,7 +1,7 @@
 export type AccountSession = {
   account: { id: string; username: string; display_name: string }
   csrf: string
-  authentication: 'password'
+  authentication: 'password' | 'face-proof-demo'
   enrollment?: { commitment: string; version: number; scheme?: string } | null
   descriptor_proof?: { verified_at: number } | null
 }

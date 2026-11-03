@@ -9,7 +9,10 @@
     "train:ml": "python3 ml/train.py",
     "setup:ml": "node scripts/setup-ml.mjs",
     "prepare:ml-browser": "node scripts/prepare-ml-browser.mjs",
-    "test:ml": "node scripts/test-ml.mjs"
+    "test:ml": "node scripts/test-ml.mjs",
+    "train:fisher": "python3 ml/train_fisher.py",
+    "test:m2": "python3 -m unittest discover -s ml -p test_m2.py",
+    "check:m2": "python3 ml/check_m2.py"
   },
   "dependencies": {
     "circom2": "0.2.22",

@@ -1,0 +1,247 @@
+{
+  "scope": "Training-only augmentation selection; calibration is not held-out test accuracy",
+  "modelSHA256": "403c0c29216a3a757fc36a21b017259fdf64ab19d887c8156a3ef14d11534904",
+  "modelJSONBytes": 93534,
+  "datasetSHA256": "b612fb967f2dc77c9c62d3e1266e0c73d5fca46a4b8906c18e454d41af987794",
+  "trainingSubjects": [
+    9,
+    19,
+    8,
+    32,
+    14,
+    0,
+    31,
+    34,
+    2,
+    13,
+    30,
+    15,
+    23,
+    18,
+    33,
+    29,
+    37,
+    6,
+    36,
+    24,
+    5,
+    20,
+    16,
+    1
+  ],
+  "calibrationSubjects": [
+    38,
+    27,
+    21,
+    17,
+    28,
+    11,
+    22,
+    12
+  ],
+  "heldOutTestUsed": false,
+  "search": [
+    {
+      "augmentation": "none",
+      "trainingCVGenuineAcceptance": 0.5620370370370371,
+      "folds": [
+        {
+          "limit": 48608.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 169,
+          "FAR": 0.0,
+          "FRR": 0.6259259259259259
+        },
+        {
+          "limit": 66490.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 144,
+          "FAR": 0.0,
+          "FRR": 0.5333333333333333
+        },
+        {
+          "limit": 76830.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 92,
+          "FAR": 0.0,
+          "FRR": 0.34074074074074073
+        },
+        {
+          "limit": 70989.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 68,
+          "FAR": 0.0,
+          "FRR": 0.2518518518518518
+        }
+      ]
+    },
+    {
+      "augmentation": "lighting",
+      "trainingCVGenuineAcceptance": 0.47962962962962963,
+      "folds": [
+        {
+          "limit": 70117.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 140,
+          "FAR": 0.0,
+          "FRR": 0.5185185185185185
+        },
+        {
+          "limit": 67589.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 163,
+          "FAR": 0.0,
+          "FRR": 0.6037037037037037
+        },
+        {
+          "limit": 74298.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 100,
+          "FAR": 0.0,
+          "FRR": 0.37037037037037035
+        },
+        {
+          "limit": 40505.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 159,
+          "FAR": 0.0,
+          "FRR": 0.5888888888888889
+        }
+      ]
+    },
+    {
+      "augmentation": "shift",
+      "trainingCVGenuineAcceptance": 0.5814814814814815,
+      "folds": [
+        {
+          "limit": 56943.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 156,
+          "FAR": 0.0,
+          "FRR": 0.5777777777777777
+        },
+        {
+          "limit": 75737.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 133,
+          "FAR": 0.0,
+          "FRR": 0.4925925925925926
+        },
+        {
+          "limit": 69553.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 105,
+          "FAR": 0.0,
+          "FRR": 0.3888888888888889
+        },
+        {
+          "limit": 80936.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 58,
+          "FAR": 0.0,
+          "FRR": 0.21481481481481482
+        }
+      ]
+    },
+    {
+      "augmentation": "both",
+      "trainingCVGenuineAcceptance": 0.462037037037037,
+      "folds": [
+        {
+          "limit": 63161.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 150,
+          "FAR": 0.0,
+          "FRR": 0.5555555555555556
+        },
+        {
+          "limit": 81016.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 137,
+          "FAR": 0.0,
+          "FRR": 0.5074074074074074
+        },
+        {
+          "limit": 68410.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 107,
+          "FAR": 0.0,
+          "FRR": 0.3962962962962963
+        },
+        {
+          "limit": 31895.0,
+          "genuinePairs": 270,
+          "impostorPairs": 1500,
+          "falseAccepts": 0,
+          "falseRejects": 187,
+          "FAR": 0.0,
+          "FRR": 0.6925925925925925
+        }
+      ]
+    }
+  ],
+  "selected": "shift",
+  "integerCalibrationStrict": {
+    "limit": 53976.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 177,
+    "FAR": 0.0,
+    "FRR": 0.49166666666666664
+  },
+  "integerCalibrationResearch": {
+    "limit": 98094.0,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 27,
+    "falseRejects": 66,
+    "FAR": 0.009642857142857142,
+    "FRR": 0.18333333333333332
+  },
+  "floatCalibrationStrict": {
+    "limit": 54501.20055141326,
+    "genuinePairs": 360,
+    "impostorPairs": 2800,
+    "falseAccepts": 0,
+    "falseRejects": 176,
+    "FAR": 0.0,
+    "FRR": 0.4888888888888889
+  },
+  "quantization": {
+    "rmse": 0.012343749338357834,
+    "maxAccumulatorBound": 2203136
+  },
+  "oracleCases": 320,
+  "accepted": false
+}
