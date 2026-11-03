@@ -12,10 +12,10 @@ def prove(payload):
  return json.loads(subprocess.run([os.getenv('NODE_BINARY','node'),str(ROOT/'zk/scripts/m4-test-proof.mjs')],input=json.dumps(payload),text=True,capture_output=True,check=True,timeout=30).stdout)
 @pytest.fixture
 def env(tmp_path):
- app=create_app(Settings('sqlite:///'+str(tmp_path/'face.sqlite')));Base.metadata.create_all(app.state.engine)
+ app=create_app(Settings(os.getenv('TEST_DATABASE_URL','sqlite:///'+str(tmp_path/'face.sqlite'))));Base.metadata.create_all(app.state.engine)
  with TestClient(app,headers=H) as c:
   s=c.post('/api/accounts/register',json={'username':'alice','display_name':'Alice','password':PASSWORD}).json();yield app,c,s
- app.state.engine.dispose()
+ Base.metadata.drop_all(app.state.engine);app.state.engine.dispose()
 def enroll(env):
  app,c,s=env;root=prove({'account':str(int(s['account']['id'].replace('-',''),16))})['enrollmentRoot']
  o=c.post('/api/face/enroll/options',json={'password':PASSWORD,'enrollmentRoot':root},headers={'x-csrf-token':s['csrf']});assert o.status_code==200,o.text;o=o.json();body={'challenge_id':o['challenge_id'],**prove(o)}
@@ -53,3 +53,11 @@ def test_concurrent_replay_only_one_session(env):
   with TestClient(app,headers=H) as other:return other.post('/api/face/login/verify',json=body).status_code
  with ThreadPoolExecutor(max_workers=2) as pool:codes=list(pool.map(submit,range(2)))
  assert sorted(codes)==[200,400]
+
+def test_largest_generated_binding_version_is_persistable(env,monkeypatch):
+ from app import face_login
+ monkeypatch.setattr(face_login.secrets,'randbelow',lambda upper:upper-1)
+ enroll(env)
+ app,c,s=env
+ with app.state.db() as db:
+  assert db.get(Enrollment,s['account']['id']).version==2**31-1

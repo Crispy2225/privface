@@ -4,6 +4,7 @@ import CameraCapture from './CameraCapture'
 import StudyCollection from './StudyCollection'
 import SiteHeader from './SiteHeader'
 import AccountAccess from './AccountAccess'
+import Dashboard from './Dashboard'
 import { api, registerAccount, loginAccount } from './account-api'
 import type { AccountSession } from './account-api'
 
@@ -60,6 +61,7 @@ function ServerStatus() {
 function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
   const isRegister=mode==='register'
   const [session,setSession]=useState<AccountSession|null>(null)
+  const usesFaceLogin = session?.enrollment?.scheme === 'privface-zkml-demo-v1'
   const [checking,setChecking]=useState(true),[busy,setBusy]=useState(false)
   const [username,setUsername]=useState('')
   const [password,setPassword]=useState(''),[confirm,setConfirm]=useState(''),[consent,setConsent]=useState(false)
@@ -84,12 +86,12 @@ function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
   }
   return <section className="auth-panel" aria-labelledby={`${id}-title`}>
     <div className="mode-switch" aria-label="Choose login or registration">
-      <button type="button" disabled={busy} aria-pressed={!isRegister} onClick={()=>{if(isRegister)onSwitch()}}>{session?'Verify face':'Log in'}</button>
+      <button type="button" disabled={busy} aria-pressed={!isRegister} onClick={()=>{if(isRegister)onSwitch()}}>{session?(usesFaceLogin?'Account':'Verify face'):'Log in'}</button>
       <button type="button" disabled={busy} aria-pressed={isRegister} onClick={()=>{if(!isRegister)onSwitch()}}>{session?'Set up face':'Register'}</button>
     </div>
     <div className="panel-heading">
       <h2 id={`${id}-title`}>{session?(isRegister?'Set up your face.':'You’re signed in.'):(isRegister?'Create your account.':'Welcome back.')}</h2>
-      <p>{session?(isRegister?'Your account is ready. Capture and save your face to finish face setup.':'You can optionally verify your face on this browser.'):(isRegister?'Choose a username and password, then capture your face.':'Sign in with your username and password.')}</p>
+      <p>{session?(isRegister?(usesFaceLogin?'Manage your saved face in the face-login flow.':'Your account is ready. Capture and save your face to finish face setup.'):(usesFaceLogin?'Your account session is active. No additional face check is required.':'You can optionally verify your face on this browser.')):(isRegister?'Choose a username and password, then capture your face.':'Sign in with your username and password.')}</p>
     </div>
     {checking?<p role="status">Checking your session…</p>:!session?<form onSubmit={submit}>
       <div className="field"><label htmlFor={`${id}-username`}>Username</label><input id={`${id}-username`} value={username} onChange={e=>setUsername(e.target.value)} autoComplete="username" autoCapitalize="none" spellCheck={false} pattern="[a-zA-Z0-9_]{3,32}" minLength={3} maxLength={32} title="Use 3–32 letters, numbers, or underscores." required /></div>
@@ -97,7 +99,12 @@ function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
       {isRegister&&<><div className="field"><label htmlFor={`${id}-confirm`}>Confirm password</label><input id={`${id}-confirm`} type="password" autoComplete="new-password" value={confirm} onChange={e=>setConfirm(e.target.value)} maxLength={128} required /></div><label className="consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} required /><span>I agree to set up my face enrollment locally on this browser.</span></label></>}
       <button className="primary-button" disabled={busy} type="submit">{busy?'Please wait…':isRegister?'Create account & capture face':'Log in'}</button>
       {message&&<p className="camera-error" role="alert">{message}</p>}
-    </form>:<CameraCapture key={session.account.id+mode} enrollment={isRegister?{username:session.account.username,displayName:session.account.display_name}:undefined} verificationUsername={isRegister?undefined:session.account.username} />}
+    </form>:usesFaceLogin?<section aria-label="Face login enrollment">
+      <p>Your account uses the face-login enrollment. The earlier local face comparison uses a different template format.</p>
+      <a className="primary-button" href={isRegister?'/face-login.html?mode=enroll':'/face-login.html'}>{isRegister?'Manage face enrollment':'Open face login'}</a>
+      {!isRegister&&<p className="camera-privacy">To rehearse face-only login, sign out first, then open Face login and leave the password blank. Your saved enrollment remains available.</p>}
+    </section>:<CameraCapture key={session.account.id+mode} enrollment={isRegister?{username:session.account.username,displayName:session.account.display_name}:undefined} verificationUsername={isRegister?undefined:session.account.username} />}
+    {!checking&&session&&<a className="primary-button" style={{marginTop:16,textDecoration:'none'}} href="/dashboard">Open dashboard →</a>}
     {!checking&&<AccountAccess session={session} onSession={accept} />}
     {!session&&<p className="switch-prompt">{isRegister?'Already registered?':'New to PrivFace?'} <button className="text-button" disabled={busy} onClick={onSwitch}>{isRegister?'Log in':'Create an account'}</button></p>}
   </section>
@@ -105,6 +112,7 @@ function AuthForm({ mode, onSwitch }: { mode: Mode; onSwitch: () => void }) {
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('login')
+  if(window.location.pathname==='/dashboard') return <Dashboard />
   if(window.location.pathname==='/study') return <div className="page-shell"><SiteHeader /><StudyCollection /></div>
   return <div className="page-shell">
     <SiteHeader />

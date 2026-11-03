@@ -1,1 +1,54 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PrivFace face login demo</title><link rel="stylesheet" href="/ui/site.css"><script src="/ui/theme.js"></script><body><div class="page-shell"><header class="site-header"><a class="brand" href="/" aria-label="PrivFace home"><svg class="face-mark small" viewBox="0 0 80 80" fill="none" aria-hidden="true"><path d="M24 10H16a6 6 0 0 0-6 6v8m46-14h8a6 6 0 0 1 6 6v8M10 56v8a6 6 0 0 0 6 6h8m32 0h8a6 6 0 0 0 6-6v-8M28 31v7m24-7v7M39 32v13h5m-16 8c7 6 17 6 24 0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg><span>privface<span class="brand-period">.</span></span></a><nav aria-label="Main navigation"><a href="/">Account</a><a href="/face-login.html">Face login</a><a href="/zkml.html">Proof lab</a><a href="/study">Calibration</a><button class="theme-toggle" id="theme-toggle" type="button">Dark</button></nav></header><main class="testing-page"><p class="eyebrow">LOCAL RESEARCH DEMONSTRATION</p><h1>Face login demonstration</h1><p>Enroll once using your password, then sign out and log in with a face proof on this browser. The research model may reject genuine faces. Password login remains available.</p><p><strong>Prototype movement check:</strong> camera checks are not certified spoof protection or part of the server proof. Keep other tabs and the device trusted.</p><section class="panel"><h2>1. Your account</h2><label>Username <input id="username" autocomplete="username" maxlength="32"></label><label>Password (enrollment or fallback only) <input id="password" type="password" autocomplete="current-password"></label><button id="password-login">Sign in with password</button><button id="logout">Sign out</button></section><section class="panel"><h2>2. Capture your face</h2><p>Use your laptop webcam or phone front camera. Face a soft light, hold the camera at eye level, and follow the movement instructions. Capture becomes available when one clear face is ready.</p><video id="video" autoplay muted playsinline aria-label="Mirrored front camera preview" style="transform:scaleX(-1);object-fit:contain"></video><p id="camera-status" role="status" aria-live="polite">Camera off. Start it when you are ready.</p><button id="camera">Start camera</button><button id="capture" disabled>Capture face</button><button id="stop">Stop camera</button><canvas id="preview" width="32" height="32" aria-label="Detected face crop"></canvas><small>Face setup is specific to this browser. Enroll separately on a new device. This research proof currently runs on localhost only; phone access over HTTPS can use camera checks and password login, but face proofs remain restricted.</small></section><section class="panel"><h2>3. Enroll or log in</h2><button id="enroll" disabled>Enroll / replace face</button><button id="login" disabled>Log in with face</button><button id="cancel">Cancel proof</button><button id="forget">Forget local template</button><small>The template is encrypted with a non-extractable device key stored in this browser. This protects stored bytes, not against malicious same-origin code or someone controlling your browser. Clearing site data requires password-authorized re-enrollment.</small></section><p id="status" role="status" aria-live="polite">Ready. Start the camera to capture a face.</p><p id="signed-in" role="status"></p><a id="continue" href="/" hidden>Continue to my account →</a><script type="module" src="/src/face-login.js"></script></main></div></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sign in · PrivFace</title>
+  <link rel="stylesheet" href="/ui/site.css"><link rel="stylesheet" href="/ui/face-login.css">
+  <script src="/ui/theme.js"></script>
+</head>
+<body>
+<div class="demo-shell">
+  <header class="site-header">
+    <a class="brand" href="/">◎ privface<span class="brand-period">.</span></a>
+    <nav aria-label="Main navigation"><a href="/">Account</a><button class="theme-toggle" id="theme-toggle" type="button">Dark</button><button id="logout" class="quiet" type="button">Sign out</button></nav>
+  </header>
+  <main class="demo-layout">
+    <section class="demo-intro">
+      <span class="demo-eyebrow">YOUR FACE. YOUR DEVICE.</span>
+      <h1>A familiar face.<br><em>A private way in.</em></h1>
+      <p>Look at your camera. Verify on your device. Continue to your account.</p>
+      <div class="privacy-card"><span aria-hidden="true">↗</span><div><strong>Your face stays here.</strong><p>Your face image is processed locally. The server verifies a proof to authorize access.</p></div></div>
+      <div class="demo-scope"><span class="scope-dot"></span>Local research demo · Password fallback available</div>
+    </section>
+    <section class="login-card" aria-labelledby="flow-title">
+      <div class="card-top"><span id="flow-eyebrow" class="demo-eyebrow">WELCOME BACK</span><a href="/">Create an account ↗</a></div>
+      <h2 id="flow-title">Sign in with your face.</h2>
+      <p id="flow-description" class="description">Use the browser where you saved your face enrollment.</p>
+      <div id="flow-form">
+        <div class="mode-picker" aria-label="Sign-in method"><button id="mode-login" type="button" aria-pressed="true">Face login</button><button id="mode-password" type="button" aria-pressed="false">Use password</button><button id="mode-enroll" type="button" aria-pressed="false">Set up face</button></div>
+        <label class="demo-field" for="username">Username<input id="username" autocomplete="username" autocapitalize="none" spellcheck="false" pattern="[a-zA-Z0-9_]{3,32}" maxlength="32" placeholder="Your username"></label>
+        <div id="password-fields" hidden><label class="demo-field" for="password">Password<input id="password" type="password" autocomplete="current-password" placeholder="Your account password"></label><p id="enroll-note" class="field-note" hidden>Saving a new face replaces this account’s previous face binding. Your password authorizes this change.</p><button id="password-login" class="demo-primary" type="button">Sign in with password →</button></div>
+        <div id="camera-section">
+          <ol class="demo-steps" aria-label="Login progress"><li id="step-capture" aria-current="step"><span>1</span> Capture</li><li id="step-verify"><span>2</span> Verify</li><li id="step-done"><span>3</span> Continue</li></ol>
+          <div class="demo-camera" id="camera-frame">
+            <video id="video" autoplay muted playsinline aria-label="Mirrored camera preview"></video>
+            <div id="camera-placeholder"><div class="face-outline" aria-hidden="true"><svg width="36" height="44" viewBox="0 0 36 44" fill="none"><path d="M10 14v5m16-5v5m-9-4v10h4m-11 7c5 4 11 4 16 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><strong>Your camera is off</strong><span>Face a soft light and keep your camera at eye level.</span></div>
+            <div id="capture-preview" hidden><canvas id="preview" width="32" height="32" aria-label="Face crop used for this attempt"></canvas><strong>Capture ready</strong><span>Confirm below to continue.</span></div>
+            <span id="camera-badge" hidden>● CAMERA ON</span>
+          </div>
+          <p id="camera-status" class="camera-prompt" role="status" aria-live="polite">Start when you’re ready. Your microphone stays off.</p>
+          <div class="demo-actions"><button id="camera" class="demo-primary" type="button">Start camera →</button><button id="capture" class="demo-primary" type="button" disabled hidden>Capture face</button><button id="stop" class="quiet" type="button" hidden>Stop camera</button></div>
+          <button id="login" class="demo-primary" type="button" disabled hidden>Verify & sign in →</button><button id="enroll" class="demo-primary" type="button" disabled hidden>Save face enrollment →</button>
+          <p class="field-note">Capture stays in this page for one minute. Keep this tab visible.</p>
+        </div>
+      </div>
+      <div id="success-panel" hidden><div class="success-icon" aria-hidden="true">✓</div><p id="signed-in" role="status"></p><a id="continue" class="demo-primary" href="/dashboard" hidden>Continue to dashboard →</a><button id="another-login" class="quiet" type="button">Sign out & try again</button></div>
+      <div id="status-box" data-kind="info"><span id="busy-indicator" hidden aria-hidden="true"></span><p id="status" role="status" aria-live="polite">Enter your username to begin.</p></div>
+      <button id="cancel" class="quiet" type="button" disabled hidden>Cancel verification</button>
+      <details class="demo-details"><summary>About this demonstration</summary><p>Face proofs run on localhost. The research model can reject genuine faces. Movement checks are experimental and do not establish certified spoof protection.</p><p>Your encrypted face template stays in this browser. Clearing site data requires password-authorized re-enrollment. Enrolling on another browser replaces the account’s current binding.</p><a href="/zkml.html">Proof lab</a> · <a href="/study">Calibration</a><button id="forget" class="quiet" type="button">Forget this browser’s template</button></details>
+    </section>
+  </main>
+  <footer class="demo-footer">PrivFace <span>Private computation. Server-verified access.</span></footer>
+</div>
+<script type="module" src="/src/face-login.js"></script>
+</body></html>

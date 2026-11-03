@@ -22,6 +22,7 @@ export default function AccountAccess({session,onSession}:{session:AccountSessio
       }else if(session){
         if(action==='logout'){await api('/logout',{},session.csrf,controller.signal);onSession(null);setMessage('Signed out.')}
         else if(action==='bind'){
+          if(session.enrollment?.scheme==='privface-zkml-demo-v1')throw new Error('Manage this enrollment on the Face login page. The older template cannot refresh it.')
           const record=await getEnrollment(session.account.username)
           if(!record)throw new Error('Capture and save your face first.')
           const config=await proofConfig(controller.signal)
@@ -48,7 +49,7 @@ export default function AccountAccess({session,onSession}:{session:AccountSessio
       {session.descriptor_proof&&<p>Private face-descriptor comparison verified.</p>}
       <button className="text-button" disabled={busy} onClick={()=>void run('logout')}>Sign out</button>
       <details key="security"><summary>Account security</summary>
-        <button className="secondary-button" disabled={busy} onClick={()=>void run('bind')}>Link or refresh saved face enrollment</button>
+        {session.enrollment?.scheme==='privface-zkml-demo-v1'?<a href="/face-login.html?mode=enroll">Manage face enrollment</a>:<button className="secondary-button" disabled={busy} onClick={()=>void run('bind')}>Link or refresh saved face enrollment</button>}
         <label className="field">Current password<input type="password" autoComplete="current-password" value={password} maxLength={128} onChange={e=>setPassword(e.target.value)} /></label>
         <button className="secondary-button" disabled={busy||!password} onClick={()=>void run('recovery-code')}>Generate recovery code</button>
         {code&&<div role="status"><p>Keep this code private. It can reset your password.</p><code style={{overflowWrap:'anywhere'}}>{code}</code><button className="text-button" onClick={()=>setCode('')}>Hide code</button></div>}

@@ -10,7 +10,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "node --experimental-strip-types --test src/*.test.ts",
+    "test": "node --experimental-strip-types --test src/*.test.ts tests/face-precheck.test.mjs",
     "test:zkml-browser": "node tests/zkml-smoke.mjs",
     "prepare:vision": "node scripts/prepare-vision.mjs && node scripts/prepare-recognition.mjs",
     "predev": "npm run prepare:vision && npm run prepare:study",
@@ -19,7 +19,8 @@
     "evaluate:matching": "node --experimental-strip-types scripts/evaluate-matching.mjs",
     "prepare:study": "node scripts/quantize-recognition.mjs public/vision/recognition-int8",
     "benchmark:zkml": "node tests/zkml-benchmark.mjs",
-    "test:face-camera": "node tests/m4-smoke.mjs"
+    "test:face-camera": "node tests/m4-smoke.mjs",
+    "test:dashboard": "node tests/dashboard-smoke.mjs"
   },
   "overrides": {
     "node-fetch": "2.7.0"

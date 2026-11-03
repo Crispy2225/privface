@@ -48,7 +48,8 @@ def install(app,session,lock_account,new_challenge,consume,issue_session,limit,r
             if current.revoked or current.expires_at<=now() or not account.active:reject()
             if not verify_password(body.password,account.password_hash):reject('Password incorrect',401)
             binding=db.get(Enrollment,account.id)
-            version=secrets.randbelow(2**32-1)+1
+            # PostgreSQL enrollment.version is a signed 32-bit INTEGER.
+            version=secrets.randbelow(2**31-1)+1
             ch=new_challenge(db,account.id,'face-enroll',session_digest=current.digest)
             expected=dict(account=str(int(account.id.replace('-',''),16)),nonce=str(int.from_bytes(ch.nonce[:31],'big') or 1),enrollmentRoot=body.enrollmentRoot,bindingVersion=str(version),operation='1',limit=p['limit'],modelTag=m['modelTag'],policyTag=m['policyTag'])
             ch.payload=dict(expected=expected,setupId=m['setupId'],model=m['modelSHA256'],previous=snapshot(binding))
